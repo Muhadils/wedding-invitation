@@ -120,34 +120,35 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
 
                 {/* Countdown */}
                 {(() => {
-                    const firstEvent = weddingData.events[0];
+                    const firstEvent = Array.isArray(weddingData.events) && weddingData.events.length > 0 ? weddingData.events[0] : null;
                     let targetDate: Date;
                     
                     try {
                         if (firstEvent && firstEvent.date) {
-                            // Ambil jam (misal: "08:00 - 10:00 WIB" -> "08:00")
-                            // Kita bersihkan karakter non-jam jika ada
-                            let startTime = firstEvent.time.split('-')[0].trim();
-                            // Pastikan menggunakan format HH:mm (ganti titik dengan titik dua jika user salah input)
-                            startTime = startTime.replace('.', ':');
+                            // Extract only the HH:mm from time string (e.g. "08:00 - 10:00 WIB")
+                            const timeMatch = firstEvent.time.match(/(\d{1,2})[:.](\d{2})/);
+                            let timeStr = "08:00";
                             
-                            // Jika format jam tidak lengkap (misal cuma "08"), tambahkan ":00"
-                            if (startTime.length <= 2) startTime += ":00";
+                            if (timeMatch) {
+                                timeStr = `${timeMatch[1].padStart(2, '0')}:${timeMatch[2]}`;
+                            }
                             
-                            // Gabungkan Tanggal + T + Jam
-                            const dateString = `${firstEvent.date}T${startTime}:00`;
+                            const dateString = `${firstEvent.date}T${timeStr}:00`;
                             targetDate = new Date(dateString);
 
-                            // Jika hasil parsing tetap tidak valid, gunakan fallback
                             if (isNaN(targetDate.getTime())) {
-                                targetDate = new Date(weddingData.countdown.targetDate);
+                                throw new Error('Invalid date');
                             }
                         } else {
-                            targetDate = new Date(weddingData.countdown.targetDate);
+                            targetDate = new Date(weddingData.countdown?.targetDate || '2026-06-15T08:00:00');
                         }
                     } catch (e) {
-                        // Fallback terakhir jika terjadi error fatal
-                        targetDate = new Date(weddingData.countdown.targetDate);
+                        targetDate = new Date(weddingData.countdown?.targetDate || '2026-06-15T08:00:00');
+                    }
+
+                    // Final fallback if everything is NaN
+                    if (isNaN(targetDate.getTime())) {
+                        targetDate = new Date('2026-06-15T08:00:00');
                     }
 
                     return <Countdown date={targetDate} renderer={renderer} />;

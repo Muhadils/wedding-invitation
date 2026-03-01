@@ -9,7 +9,9 @@ interface LocationMapProps {
 }
 
 export default function LocationMap({ weddingData }: LocationMapProps) {
-    const mainEvent = weddingData.events[0];
+    const events = Array.isArray(weddingData.events) ? weddingData.events : [];
+
+    if (events.length === 0) return null;
 
     return (
         <section className="section bg-black relative overflow-hidden">
@@ -37,7 +39,7 @@ export default function LocationMap({ weddingData }: LocationMapProps) {
                 </motion.div>
 
                 <div className="space-y-16">
-                    {weddingData.events.map((event, index) => (
+                    {events.map((event, index) => (
                         <div key={index} className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto items-center">
                             {/* Location Info Card */}
                             <motion.div

@@ -52,8 +52,8 @@ export default function ClientWrapper({ guestName, weddingData }: ClientWrapperP
                     <PhotoGallery weddingData={weddingData} />
                     <LocationMap weddingData={weddingData} />
                     <GiftSection weddingData={weddingData} />
-                    <RSVPForm />
-                    <WishesSection />
+                    <RSVPForm weddingData={weddingData} />
+                    <WishesSection weddingData={weddingData} />
                     <Footer weddingData={weddingData} />
                 </div>
             )}

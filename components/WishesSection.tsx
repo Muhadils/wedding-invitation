@@ -9,7 +9,11 @@ import { WeddingData } from '@/data/wedding-data'; // Keep for other data, but n
 // Assuming Wish is part of WeddingData
 type Wish = WeddingData['wishes'][0];
 
-export default function WishesSection() {
+interface WishesSectionProps {
+    weddingData?: WeddingData;
+}
+
+export default function WishesSection({ weddingData }: WishesSectionProps) {
     const [allWishes, setAllWishes] = useState<Wish[]>([]); // Initialize with empty array
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

@@ -3,8 +3,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaPaperPlane, FaHeart, FaCheckCircle } from 'react-icons/fa';
+import { WeddingData } from '@/data/wedding-data';
 
-export default function RSVPForm() {
+interface RSVPFormProps {
+    weddingData?: WeddingData;
+}
+
+export default function RSVPForm({ weddingData }: RSVPFormProps) {
     const [formData, setFormData] = useState({
         name: '',
         attendance: '',
