@@ -92,12 +92,9 @@ export const weddingData: WeddingData = {
         },
     ],
     gallery: [
-        { id: 1, url: '/images/gallery/IMG_2689.JPEG', caption: 'Our Wedding Photo' },
-        { id: 2, url: '/images/gallery/photo2.jpg', caption: 'Our love story' },
-        { id: 3, url: '/images/gallery/photo3.jpg', caption: 'Together forever' },
-        { id: 4, url: '/images/gallery/photo4.jpg', caption: 'Beautiful memories' },
-        { id: 5, url: '/images/gallery/photo5.jpg', caption: 'Endless love' },
-        { id: 6, url: '/images/gallery/photo6.jpg', caption: 'Perfect match' },
+        { id: 1, url: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070', caption: 'Our Wedding Photo' },
+        { id: 2, url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069', caption: 'Our love story' },
+        { id: 3, url: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1974', caption: 'Together forever' },
     ],
     loveStory: [
         {
