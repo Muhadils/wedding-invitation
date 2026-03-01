@@ -267,7 +267,62 @@ export default function AdminPage() {
 
                     <div className="p-8">
                         {activeTab === 'couple' && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                            <div className="space-y-12">
+                                {/* Hero Image Section */}
+                                <div className="bg-gray-50 p-6 rounded-2xl border-2 border-dashed border-gray-200">
+                                    <h3 className="font-bold text-lg text-navy-800 mb-4 flex items-center gap-2">
+                                        <FaImage className="text-gold-500" /> Foto Utama (Hero)
+                                    </h3>
+                                    <div className="flex flex-col md:flex-row gap-6 items-center">
+                                        <div className="w-full md:w-48 aspect-[2/3] rounded-xl overflow-hidden bg-gray-200 border-2 border-white shadow-md">
+                                            <img 
+                                                src={data.couple?.heroImage || 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070'} 
+                                                alt="Hero Preview" 
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                        <div className="flex-1 space-y-4 w-full">
+                                            <InputField 
+                                                label="URL Foto Utama" 
+                                                value={data.couple?.heroImage} 
+                                                onChange={(v) => updateField('couple.heroImage', v)} 
+                                            />
+                                            <p className="text-xs text-gray-500 italic">
+                                                Masukkan path lokal (misal: /images/hero.jpg) atau link URL foto.
+                                            </p>
+                                            <label className="inline-flex items-center justify-center gap-2 bg-navy-700 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-navy-800 transition text-sm font-bold shadow-md">
+                                                <FaPlus /> Ganti Foto (Upload Lokal)
+                                                <input 
+                                                    type="file" 
+                                                    accept="image/*" 
+                                                    className="hidden" 
+                                                    onChange={async (e) => {
+                                                        if (e.target.files?.[0]) {
+                                                            const file = e.target.files[0];
+                                                            const formData = new FormData();
+                                                            formData.append('file', file);
+                                                            setLoading(true);
+                                                            try {
+                                                                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                                                                const result = await res.json();
+                                                                if (res.ok) {
+                                                                    updateField('couple.heroImage', result.url);
+                                                                    setMessage({ type: 'success', text: 'Foto utama berhasil diganti!' });
+                                                                }
+                                                            } catch (e) {
+                                                                setMessage({ type: 'error', text: 'Gagal upload foto' });
+                                                            } finally {
+                                                                setLoading(false);
+                                                            }
+                                                        }
+                                                    }} 
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                                 <Section title="Mempelai Wanita">
                                     <InputField label="Nama Lengkap" value={data.couple?.bride?.fullName} onChange={(v) => updateField('couple.bride.fullName', v)} />
                                     <InputField label="Nama Panggilan" value={data.couple?.bride?.shortName} onChange={(v) => updateField('couple.bride.shortName', v)} />

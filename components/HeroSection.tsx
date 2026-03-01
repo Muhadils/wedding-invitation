@@ -44,7 +44,10 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
             {/* Parallax Background & Overlay */}
             <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
                 {/* Main Background Image */}
-                <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${weddingData.gallery[0]?.url || '/images/couple-1.jpg'})` }} />
+                <div 
+                    className="absolute inset-0 bg-cover bg-center" 
+                    style={{ backgroundImage: `url(${weddingData.couple?.heroImage || weddingData.gallery[0]?.url || 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070'})` }} 
+                />
                 {/* Dark Overlay for Text Readability */}
                 <div className="absolute inset-0 bg-black/60" />
             </motion.div>

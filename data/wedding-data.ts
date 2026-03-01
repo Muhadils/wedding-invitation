@@ -15,6 +15,7 @@ export interface WeddingData {
             instagram?: string;
             parents: string;
         };
+        heroImage?: string;
     };
     events: Array<{
         name: string;
@@ -74,6 +75,7 @@ export const weddingData: WeddingData = {
             instagram: '@andrikurniawan',
             parents: 'Putra dari Bapak [Nama Ayah Andri] & Ibu [Nama Ibu Andri]',
         },
+        heroImage: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070',
     },
     countdown: {
         targetDate: '2026-06-15T08:00:00',
