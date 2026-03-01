@@ -105,16 +105,22 @@ export default function LocationMap({ weddingData }: LocationMapProps) {
                                 className="h-[400px] lg:h-full min-h-[400px] order-1 lg:order-none"
                             >
                                 <div className="rounded-3xl overflow-hidden h-full shadow-2xl border border-gold-500/30">
-                                    <iframe
-                                        src={event.location.embedUrl}
-                                        width="100%"
-                                        height="100%"
-                                        style={{ border: 0, filter: 'grayscale(0.2) contrast(1.1)' }}
-                                        allowFullScreen
-                                        loading="lazy"
-                                        referrerPolicy="no-referrer-when-downgrade"
-                                        className="w-full h-full"
-                                    />
+                                    {event.location?.embedUrl ? (
+                                        <iframe
+                                            src={event.location.embedUrl}
+                                            width="100%"
+                                            height="100%"
+                                            style={{ border: 0, filter: 'grayscale(0.2) contrast(1.1)' }}
+                                            allowFullScreen
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                            className="w-full h-full"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-zinc-800 flex items-center justify-center text-gray-500 italic">
+                                            Peta belum tersedia
+                                        </div>
+                                    )}
                                 </div>
                             </motion.div>
                         </div>
