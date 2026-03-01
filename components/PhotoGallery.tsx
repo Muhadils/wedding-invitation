@@ -63,10 +63,10 @@ export default function PhotoGallery({ weddingData }: PhotoGalleryProps) {
                         pagination={{ clickable: true }}
                         autoplay={{ delay: 4000, disableOnInteraction: false }}
                         effect="fade"
-                        loop={true}
+                        loop={Array.isArray(weddingData.gallery) && weddingData.gallery.length > 1}
                         className="rounded-3xl overflow-hidden shadow-[0_0_30px_rgba(230,184,0,0.15)] border border-gold-500/20"
                     >
-                        {weddingData.gallery.map((photo) => (
+                        {Array.isArray(weddingData.gallery) && weddingData.gallery.map((photo) => (
                             <SwiperSlide key={photo.id}>
                                 <div
                                     className="relative aspect-[16/10] cursor-pointer group"
@@ -97,7 +97,7 @@ export default function PhotoGallery({ weddingData }: PhotoGalleryProps) {
                     viewport={{ once: true }}
                     className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-12 max-w-5xl mx-auto"
                 >
-                    {weddingData.gallery.map((photo, index) => (
+                    {Array.isArray(weddingData.gallery) && weddingData.gallery.map((photo, index) => (
                         <motion.div
                             key={photo.id}
                             initial={{ opacity: 0, scale: 0.8 }}
@@ -147,9 +147,11 @@ export default function PhotoGallery({ weddingData }: PhotoGalleryProps) {
                             className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl border border-white/10"
                             onClick={(e) => e.stopPropagation()}
                         />
-                        <p className="absolute bottom-8 text-gold-200 font-elegant text-xl">
-                            {weddingData.gallery.find(p => p.id === selectedImage)?.caption}
-                        </p>
+                        {weddingData.gallery.find(p => p.id === selectedImage)?.caption && (
+                            <p className="absolute bottom-8 text-gold-200 font-elegant text-xl">
+                                {weddingData.gallery.find(p => p.id === selectedImage)?.caption}
+                            </p>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>

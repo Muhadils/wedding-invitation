@@ -22,10 +22,17 @@ export default function WishesSection() {
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status}`);
             }
-            const data: Wish[] = await res.json();
-            setAllWishes(data.reverse()); // Reverse to show latest first
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                // Latest first is already handled by API (order: desc), 
+                // but we can ensure it here just in case.
+                setAllWishes(data); 
+            } else {
+                setAllWishes([]);
+            }
         } catch (e: any) {
             setError(e.message || 'Failed to fetch wishes');
+            setAllWishes([]);
             console.error('Failed to fetch wishes:', e);
         } finally {
             setIsLoading(false);
