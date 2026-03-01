@@ -276,7 +276,7 @@ export default function AdminPage() {
                                     </label>
                                 </div>
                                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                    {data.gallery.map((photo: any, index: number) => (
+                                    {Array.isArray(data.gallery) && data.gallery.map((photo: any, index: number) => (
                                         <div key={index} className="relative group aspect-square rounded-2xl overflow-hidden bg-gray-100 border-2 border-gray-200">
                                             <img src={photo.url} alt="" className="w-full h-full object-cover" />
                                             <button

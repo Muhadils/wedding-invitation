@@ -1,23 +1,20 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { getWeddingData } from '@/lib/db';
 import { cookies } from 'next/headers';
 
 export async function GET() {
     try {
-        const { data, error } = await supabase
-            .from('wedding_settings')
-            .select('*')
-            .single();
-
-        if (error) throw error;
+        // Gunakan getWeddingData agar mendapatkan data lengkap (Settings + Gallery + Wishes)
+        const data = await getWeddingData();
         return NextResponse.json(data);
     } catch (error) {
-        return NextResponse.json({ message: 'Error fetching settings' }, { status: 500 });
+        console.error('Error in GET /api/content:', error);
+        return NextResponse.json({ message: 'Error fetching content' }, { status: 500 });
     }
 }
 
 export async function POST(request: Request) {
-    // Protect route
     const cookieStore = await cookies();
     const token = cookieStore.get('admin_token');
 
@@ -28,6 +25,7 @@ export async function POST(request: Request) {
     try {
         const newData = await request.json();
         
+        // Simpan hanya bagian settings ke tabel wedding_settings
         const { error } = await supabase
             .from('wedding_settings')
             .update({
