@@ -1,0 +1,169 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import Countdown from 'react-countdown';
+import { WeddingData } from '@/data/wedding-data';
+
+interface CountdownItemProps {
+    value: number;
+    label: string;
+    delay: number;
+}
+
+const CountdownItem = ({ value, label, delay }: CountdownItemProps) => (
+    <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ delay, duration: 0.6 }}
+        viewport={{ once: true }}
+        className="glass-gold rounded-2xl p-6 md:p-8 min-w-[100px] md:min-w-[140px] glow"
+    >
+        <motion.div
+            key={value}
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="font-display text-4xl md:text-6xl font-bold text-gradient-gold mb-2"
+        >
+            {String(value).padStart(2, '0')}
+        </motion.div>
+        <p className="text-navy-600 text-xs md:text-sm uppercase tracking-wider font-semibold">
+            {label}
+        </p>
+    </motion.div>
+);
+
+interface CountdownTimerProps {
+    weddingData: WeddingData;
+}
+
+export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return null;
+    }
+
+    const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
+        if (completed) {
+            return (
+                <div className="text-center">
+                    <motion.h3
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.8, type: 'spring' }}
+                        className="font-script text-5xl md:text-7xl text-gradient-gold"
+                    >
+                        The Day Has Arrived! 🎉
+                    </motion.h3>
+                </div>
+            );
+        }
+
+        return (
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+                <CountdownItem value={days} label="Hari" delay={0.2} />
+                <CountdownItem value={hours} label="Jam" delay={0.3} />
+                <CountdownItem value={minutes} label="Menit" delay={0.4} />
+                <CountdownItem value={seconds} label="Detik" delay={0.5} />
+            </div>
+        );
+    };
+
+    return (
+        <section className="section bg-black relative overflow-hidden text-white">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-20">
+                <div className="absolute inset-0" style={{
+                    backgroundImage: `radial-gradient(circle, var(--gold) 1px, transparent 1px)`,
+                    backgroundSize: '30px 30px'
+                }} />
+            </div>
+
+            <div className="relative z-10 container mx-auto px-6 text-center">
+                {/* Top Ornament */}
+                <motion.div
+                    initial={{ opacity: 0, y: -30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    viewport={{ once: true }}
+                    className="text-gold-500 text-5xl mb-6 glow"
+                >
+                    ✧
+                </motion.div>
+
+                {/* Title */}
+                <motion.h2
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    viewport={{ once: true }}
+                    className="font-display text-4xl md:text-5xl font-bold text-gold-200 mb-4 tracking-wider"
+                >
+                    Counting Down to Forever
+                </motion.h2>
+
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 0.8 }}
+                    viewport={{ once: true }}
+                    className="font-elegant text-lg md:text-xl text-gray-400 mb-12 italic"
+                >
+                    Our special day is approaching
+                </motion.p>
+
+                {/* Countdown */}
+                {(() => {
+                    const firstEvent = weddingData.events[0];
+                    let targetDate: Date;
+                    
+                    try {
+                        if (firstEvent && firstEvent.date) {
+                            // Ambil jam (misal: "08:00 - 10:00 WIB" -> "08:00")
+                            // Kita bersihkan karakter non-jam jika ada
+                            let startTime = firstEvent.time.split('-')[0].trim();
+                            // Pastikan menggunakan format HH:mm (ganti titik dengan titik dua jika user salah input)
+                            startTime = startTime.replace('.', ':');
+                            
+                            // Jika format jam tidak lengkap (misal cuma "08"), tambahkan ":00"
+                            if (startTime.length <= 2) startTime += ":00";
+                            
+                            // Gabungkan Tanggal + T + Jam
+                            const dateString = `${firstEvent.date}T${startTime}:00`;
+                            targetDate = new Date(dateString);
+
+                            // Jika hasil parsing tetap tidak valid, gunakan fallback
+                            if (isNaN(targetDate.getTime())) {
+                                targetDate = new Date(weddingData.countdown.targetDate);
+                            }
+                        } else {
+                            targetDate = new Date(weddingData.countdown.targetDate);
+                        }
+                    } catch (e) {
+                        // Fallback terakhir jika terjadi error fatal
+                        targetDate = new Date(weddingData.countdown.targetDate);
+                    }
+
+                    return <Countdown date={targetDate} renderer={renderer} />;
+                })()}
+
+                {/* Bottom Ornament */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    viewport={{ once: true }}
+                    className="text-gold-500 text-5xl mt-12 glow"
+                >
+                    ✧
+                </motion.div>
+            </div>
+        </section>
+    );
+}
