@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
     // Protect route
     const cookieStore = await cookies();
-    const token = cookieStore.get('admin_token');
+    const token = (await cookieStore).get('admin_token');
 
     if (!token || token.value !== 'true') {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -23,19 +22,29 @@ export async function POST(request: Request) {
         const buffer = Buffer.from(await file.arrayBuffer());
         // Create unique filename
         const filename = `upload-${Date.now()}-${file.name.replace(/\s/g, '_')}`;
-        const uploadDir = path.join(process.cwd(), 'public/images/gallery');
 
-        // Ensure directory exists
-        await mkdir(uploadDir, { recursive: true });
+        // Upload to Supabase Storage
+        const { data, error } = await supabase.storage
+            .from('gallery')
+            .upload(filename, buffer, {
+                contentType: file.type,
+                cacheControl: '3600',
+                upsert: false
+            });
 
-        await writeFile(path.join(uploadDir, filename), buffer);
+        if (error) throw error;
+
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+            .from('gallery')
+            .getPublicUrl(filename);
 
         return NextResponse.json({
             success: true,
-            url: `/images/gallery/${filename}`
+            url: publicUrl
         });
     } catch (error) {
-        console.error('Upload error:', error);
+        console.error('Supabase Upload error:', error);
         return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
     }
 }
