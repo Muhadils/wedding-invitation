@@ -336,6 +336,7 @@ export default function AdminPage() {
                                     <InputField label="Instagram" value={data.couple?.groom?.instagram} onChange={(v) => updateField('couple.groom.instagram', v)} />
                                 </Section>
                             </div>
+                        </div>
                         )}
 
                         {activeTab === 'gallery' && (
