@@ -142,9 +142,9 @@ export const weddingData: WeddingData = {
         },
     ],
     music: {
-        url: '/music/WhatsApp Video 2026-02-16 at 21.44.38.mp3', // Replace with your music file
-        title: 'Perfect',
-        artist: 'Ed Sheeran',
+        url: '/music/WhatsApp Video 2026-02-16 at 23.34.29.mp3',
+        title: 'Background Music',
+        artist: 'Salma & Andri',
     },
     gifts: [
         {
