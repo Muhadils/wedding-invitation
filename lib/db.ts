@@ -38,7 +38,7 @@ export async function getWeddingData(): Promise<WeddingData> {
             },
             events: ensureArray(settings?.events, defaultData.events),
             loveStory: ensureArray(settings?.love_story, defaultData.loveStory),
-            gifts: ensureArray(settings?.gifts, defaultData.gifts),
+            gifts: ensureArray(settings?.gifts, defaultData.gifts || []),
             music: settings?.music || defaultData.music,
             countdown: settings?.countdown || defaultData.countdown,
             wishes: Array.isArray(wishesData) ? wishesData : defaultData.wishes,
