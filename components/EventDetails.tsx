@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { FaClock, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
-import { weddingData, downloadCalendar } from '@/data/wedding-data';
+import { weddingData, downloadCalendar, type WeddingData } from '@/data/wedding-data';
 
 interface EventCardProps {
     event: typeof weddingData.events[0];
