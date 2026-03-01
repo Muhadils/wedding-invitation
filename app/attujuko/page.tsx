@@ -151,9 +151,6 @@ export default function AdminPage() {
                 googleMapsUrl: '', // Corrected initialization
                 embedUrl: '',
             },
-            title: 'Judul Acara Baru',
-            // address: 'Alamat Lengkap Acara Baru', // Removed as it's part of location
-            // mapUrl: '', // Removed as it's part of location
         });
         setData(newData);
     };
