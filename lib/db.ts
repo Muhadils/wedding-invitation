@@ -1,58 +1,36 @@
-import fs from 'fs/promises';
-import path from 'path';
 import { weddingData as defaultData, WeddingData } from '@/data/wedding-data';
-
-const DB_PATH = path.join(process.cwd(), 'data', 'db.json');
+import { supabase } from '@/lib/supabase';
 
 export async function getWeddingData(): Promise<WeddingData> {
     try {
-        const data = await fs.readFile(DB_PATH, 'utf-8');
-        const parsed = JSON.parse(data);
+        // Fetch only dynamic wishes from Supabase
+        const { data: wishesData, error } = await supabase
+            .from('wishes')
+            .select('*')
+            .order('timestamp', { ascending: false });
 
-        // Merge with defaultData to ensure all required fields exist
+        if (error) {
+            console.error('Error fetching wishes from Supabase:', error);
+            // Fallback to default wishes if Supabase fails
+            return defaultData;
+        }
+
+        // Merge default data with wishes from Supabase
         return {
             ...defaultData,
-            ...parsed,
-            events: (parsed.events || defaultData.events).map((parsedEvent: any, index: number) => {
-                const defaultEvent = defaultData.events[index] || defaultData.events[0];
-                return {
-                    ...defaultEvent,
-                    ...parsedEvent,
-                    location: {
-                        ...defaultEvent.location,
-                        ...parsedEvent.location,
-                    }
-                };
-            }),
+            wishes: wishesData || defaultData.wishes,
         };
     } catch (error) {
-        // Fallback to default data if db.json is not found or cannot be read
-        console.warn('Database not found or inaccessible, using default data');
+        console.error('Error in getWeddingData:', error);
         return defaultData;
     }
 }
 
+// Keep these for backward compatibility or local development
 export async function updateWeddingData(newData: WeddingData): Promise<boolean> {
-    try {
-        // Only attempt to write if we're in a local environment where writing is possible
-        if (process.env.NODE_ENV === 'development') {
-            await fs.writeFile(DB_PATH, JSON.stringify(newData, null, 2), 'utf-8');
-            return true;
-        }
-        return false;
-    } catch (error) {
-        console.error('Error writing to db.json:', error);
-        return false;
-    }
+    return false; // Not supported on Vercel
 }
 
 export async function initDb() {
-    // Only initialize in development
-    if (process.env.NODE_ENV === 'development') {
-        try {
-            await fs.access(DB_PATH);
-        } catch {
-            await fs.writeFile(DB_PATH, JSON.stringify(defaultData, null, 2), 'utf-8');
-        }
-    }
+    // Not needed on Vercel
 }
