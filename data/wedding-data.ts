@@ -63,16 +63,16 @@ export interface WeddingData {
 export const weddingData: WeddingData = {
     couple: {
         bride: {
-            fullName: 'Putri Andini Maharani',
-            shortName: 'Putri',
-            instagram: '@putriandini',
-            parents: 'Putri dari Bapak Ahmad Wijaya & Ibu Siti Nurhaliza',
+            fullName: 'Salma Azzahra',
+            shortName: 'Salma',
+            instagram: '@salmaazzahra',
+            parents: 'Putri dari Bapak [Nama Ayah Salma] & Ibu [Nama Ibu Salma]',
         },
         groom: {
-            fullName: 'Raden Mas Satria Widjaja',
-            shortName: 'Satria',
-            instagram: '@satriawidjaja',
-            parents: 'Putra dari Bapak Dr. Bambang Widjaja & Ibu Ir. Dewi Kusuma',
+            fullName: 'Andri Kurniawan',
+            shortName: 'Andri',
+            instagram: '@andrikurniawan',
+            parents: 'Putra dari Bapak [Nama Ayah Andri] & Ibu [Nama Ibu Andri]',
         },
     },
     countdown: {
@@ -153,12 +153,12 @@ export const weddingData: WeddingData = {
         {
             bankName: 'BCA',
             accountNumber: '1234567890',
-            accountHolder: 'Putri Andini Maharani'
+            accountHolder: 'Salma Azzahra'
         },
         {
             bankName: 'Mandiri',
             accountNumber: '0987654321',
-            accountHolder: 'Raden Mas Satria'
+            accountHolder: 'Andri Kurniawan'
         }
     ]
 };
