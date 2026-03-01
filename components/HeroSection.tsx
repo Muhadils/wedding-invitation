@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, Variants } from 'framer-motion';
 import { WeddingData } from '@/data/wedding-data';
 
 interface HeroSectionProps {
@@ -19,7 +19,7 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     // Animation Variants
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -30,7 +30,7 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
         },
     };
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: { opacity: 0, y: 30 },
         visible: {
             opacity: 1,
