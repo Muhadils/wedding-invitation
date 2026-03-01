@@ -3,15 +3,16 @@ import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
-    // Protect route
-    const cookieStore = await cookies();
-    const token = (await cookieStore).get('admin_token');
-
-    if (!token || token.value !== 'true') {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
     try {
+        // 1. Periksa Login (Next.js 15 way)
+        const cookieStore = await cookies();
+        const token = cookieStore.get('admin_token');
+
+        if (!token || token.value !== 'true') {
+            console.error('Unauthorized: No admin token found');
+            return NextResponse.json({ error: 'Unauthorized. Please login again.' }, { status: 401 });
+        }
+
         const formData = await request.formData();
         const file = formData.get('file') as File;
 
@@ -20,10 +21,9 @@ export async function POST(request: Request) {
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
-        // Create unique filename
-        const filename = `upload-${Date.now()}-${file.name.replace(/\s/g, '_')}`;
+        const filename = `gallery-${Date.now()}-${file.name.replace(/\s/g, '_')}`;
 
-        // 1. Upload to Supabase Storage (Bucket: gallery)
+        // 2. Upload ke Supabase Storage (Bucket: gallery)
         const { data: uploadData, error: uploadError } = await supabase.storage
             .from('gallery')
             .upload(filename, buffer, {
@@ -32,26 +32,32 @@ export async function POST(request: Request) {
                 upsert: false
             });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+            console.error('Supabase Storage Error:', uploadError);
+            return NextResponse.json({ error: uploadError.message }, { status: 500 });
+        }
 
-        // 2. Get public URL
+        // 3. Ambil URL Publik
         const { data: { publicUrl } } = supabase.storage
             .from('gallery')
             .getPublicUrl(filename);
 
-        // 3. Save link to Database (Table: gallery)
+        // 4. Catat di Database agar muncul di Gallery
         const { error: dbError } = await supabase
             .from('gallery')
             .insert([{ url: publicUrl, caption: file.name }]);
 
-        if (dbError) throw dbError;
+        if (dbError) {
+            console.error('Supabase Database Error:', dbError);
+            return NextResponse.json({ error: dbError.message }, { status: 500 });
+        }
 
         return NextResponse.json({
             success: true,
             url: publicUrl
         });
-    } catch (error) {
-        console.error('Supabase Upload error:', error);
-        return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    } catch (error: any) {
+        console.error('Global Upload Error:', error);
+        return NextResponse.json({ error: error.message || 'Upload failed' }, { status: 500 });
     }
 }
