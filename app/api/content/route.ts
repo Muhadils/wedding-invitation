@@ -1,18 +1,19 @@
 import { NextResponse } from 'next/server';
-import { getWeddingData, updateWeddingData } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 
 export async function GET() {
-    // Protect route
-    const cookieStore = await cookies();
-    const token = cookieStore.get('admin_token');
+    try {
+        const { data, error } = await supabase
+            .from('wedding_settings')
+            .select('*')
+            .single();
 
-    if (!token || token.value !== 'true') {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        if (error) throw error;
+        return NextResponse.json(data);
+    } catch (error) {
+        return NextResponse.json({ message: 'Error fetching settings' }, { status: 500 });
     }
-
-    const data = await getWeddingData();
-    return NextResponse.json(data);
 }
 
 export async function POST(request: Request) {
@@ -26,14 +27,25 @@ export async function POST(request: Request) {
 
     try {
         const newData = await request.json();
-        const success = await updateWeddingData(newData);
+        
+        const { error } = await supabase
+            .from('wedding_settings')
+            .update({
+                couple: newData.couple,
+                events: newData.events,
+                love_story: newData.loveStory,
+                gifts: newData.gifts,
+                music: newData.music,
+                countdown: newData.countdown,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', 1);
 
-        if (success) {
-            return NextResponse.json({ success: true });
-        } else {
-            return NextResponse.json({ success: false, message: 'Failed to save' }, { status: 500 });
-        }
-    } catch (error) {
-        return NextResponse.json({ success: false, message: 'Invalid data' }, { status: 400 });
+        if (error) throw error;
+
+        return NextResponse.json({ success: true });
+    } catch (error: any) {
+        console.error('Update settings error:', error);
+        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }
 }
