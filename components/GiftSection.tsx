@@ -18,7 +18,7 @@ export default function GiftSection({ weddingData }: GiftSectionProps) {
         setTimeout(() => setCopiedIndex(null), 2000);
     };
 
-    if (!weddingData.gifts || weddingData.gifts.length === 0) return null;
+    if (!Array.isArray(weddingData.gifts) || weddingData.gifts.length === 0) return null;
 
     return (
         <section className="py-20 bg-gray-50 overflow-hidden">
@@ -41,7 +41,7 @@ export default function GiftSection({ weddingData }: GiftSectionProps) {
                 </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {weddingData.gifts.map((gift, index) => (
+                    {Array.isArray(weddingData.gifts) && weddingData.gifts.map((gift, index) => (
                         <motion.div
                             key={index}
                             initial={{ opacity: 0, scale: 0.9 }}

@@ -125,7 +125,7 @@ export default function EventDetails({ weddingData }: EventDetailsProps) {
 
                 {/* Event Cards */}
                 <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-                    {weddingData.events.map((event, index) => (
+                    {Array.isArray(weddingData.events) && weddingData.events.map((event, index) => (
                         <EventCard key={index} event={event} index={index} eventIndex={index} />
                     ))}
                 </div>
