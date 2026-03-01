@@ -7,7 +7,7 @@ export async function getWeddingData(): Promise<WeddingData> {
         const { data: settings, error: settingsError } = await supabase
             .from('wedding_settings')
             .select('*')
-            .single();
+            .maybeSingle();
 
         // 2. Ambil Ucapan (Wishes)
         const { data: wishesData, error: wishesError } = await supabase
@@ -21,23 +21,35 @@ export async function getWeddingData(): Promise<WeddingData> {
             .select('*')
             .order('created_at', { ascending: false });
 
-        if (settingsError) console.error('Error fetching settings from Supabase:', settingsError);
+        if (settingsError || wishesError || galleryError) {
+            console.error('Error fetching data from Supabase:', { settingsError, wishesError, galleryError });
+        }
 
-        // Merge Data
+        // Helper function to safely parse and merge JSON data
+        const safeData = (dbValue: any, defaultValue: any) => {
+            if (!dbValue) return defaultValue;
+            if (Array.isArray(dbValue) && dbValue.length === 0) return defaultValue;
+            return dbValue;
+        };
+
+        // Merge Data with Fallbacks
         return {
             ...defaultData,
-            // Prioritaskan data dari database jika ada
             couple: settings?.couple || defaultData.couple,
-            events: settings?.events && settings.events.length > 0 ? settings.events : defaultData.events,
-            loveStory: settings?.love_story && settings.love_story.length > 0 ? settings.love_story : defaultData.loveStory,
-            gifts: settings?.gifts && settings.gifts.length > 0 ? settings.gifts : defaultData.gifts,
+            events: safeData(settings?.events, defaultData.events),
+            loveStory: safeData(settings?.love_story, defaultData.loveStory),
+            gifts: safeData(settings?.gifts, defaultData.gifts),
             music: settings?.music || defaultData.music,
             countdown: settings?.countdown || defaultData.countdown,
             
             // Wishes & Gallery (Dinamis)
-            wishes: wishesData && wishesData.length > 0 ? wishesData : defaultData.wishes,
-            gallery: galleryData && galleryData.length > 0 
-                ? galleryData.map((item: any, index: number) => ({ id: index + 1, url: item.url, caption: item.caption })) 
+            wishes: Array.isArray(wishesData) ? wishesData : defaultData.wishes,
+            gallery: Array.isArray(galleryData) && galleryData.length > 0 
+                ? galleryData.map((item: any, index: number) => ({ 
+                    id: index + 1, 
+                    url: item.url, 
+                    caption: item.caption || '' 
+                })) 
                 : defaultData.gallery,
         };
     } catch (error) {
@@ -47,10 +59,9 @@ export async function getWeddingData(): Promise<WeddingData> {
 }
 
 export async function updateWeddingData(newData: WeddingData): Promise<boolean> {
-    // Dipindahkan ke app/api/content/route.ts
-    return false; 
+    return false; // Handled in API route
 }
 
 export async function initDb() {
-    // Tidak diperlukan lagi
+    // Not needed on Vercel
 }
