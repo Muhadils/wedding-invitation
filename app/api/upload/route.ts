@@ -23,8 +23,8 @@ export async function POST(request: Request) {
         // Create unique filename
         const filename = `upload-${Date.now()}-${file.name.replace(/\s/g, '_')}`;
 
-        // Upload to Supabase Storage
-        const { data, error } = await supabase.storage
+        // 1. Upload to Supabase Storage (Bucket: gallery)
+        const { data: uploadData, error: uploadError } = await supabase.storage
             .from('gallery')
             .upload(filename, buffer, {
                 contentType: file.type,
@@ -32,12 +32,19 @@ export async function POST(request: Request) {
                 upsert: false
             });
 
-        if (error) throw error;
+        if (uploadError) throw uploadError;
 
-        // Get public URL
+        // 2. Get public URL
         const { data: { publicUrl } } = supabase.storage
             .from('gallery')
             .getPublicUrl(filename);
+
+        // 3. Save link to Database (Table: gallery)
+        const { error: dbError } = await supabase
+            .from('gallery')
+            .insert([{ url: publicUrl, caption: file.name }]);
+
+        if (dbError) throw dbError;
 
         return NextResponse.json({
             success: true,
