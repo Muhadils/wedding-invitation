@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaSave, FaTrash, FaImage, FaHeart, FaCalendarAlt, FaMusic, FaGift, FaArrowLeft } from 'react-icons/fa';
+import { FaSave, FaTrash, FaImage, FaHeart, FaCalendarAlt, FaMusic, FaGift, FaArrowLeft, FaPlus } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
