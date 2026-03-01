@@ -509,7 +509,7 @@ export default function AdminPage() {
                                                     <FaTrash />
                                                 </button>
                                             </div>
-                                            <p className="mt-3 text-gray-800 italic">"{wish.message}"</p>
+                                            <p className="mt-3 text-gray-800 italic">&quot;{wish.message}&quot;</p>
                                         </div>
                                     ))}
                                     {(!data.wishes || data.wishes.length === 0) && (

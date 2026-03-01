@@ -116,7 +116,7 @@ export default function WishesSection() {
 
                             {/* Message */}
                             <p className="font-elegant text-base text-navy-700 leading-relaxed italic">
-                                "{wish.message}"
+                                &quot;{wish.message}&quot;
                             </p>
 
                             {/* Decorative Element */}
