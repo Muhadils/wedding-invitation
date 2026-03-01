@@ -143,6 +143,33 @@ export default function AdminPage() {
         }
     };
 
+    const addEvent = () => {
+        if (!data) return;
+        const newData = { ...data };
+        if (!newData.events) newData.events = [];
+        newData.events.push({
+            name: 'Acara Baru',
+            date: new Date().toISOString().slice(0, 10),
+            time: '08:00 - 10:00 WIB',
+            location: {
+                name: 'Nama Lokasi',
+                address: 'Alamat Lengkap',
+                googleMapsUrl: '',
+                embedUrl: '',
+            }
+        });
+        setData(newData);
+    };
+
+    const removeEvent = (index: number) => {
+        if (!data || !data.events) return;
+        if (confirm('Yakin ingin menghapus acara ini?')) {
+            const newData = { ...data };
+            newData.events.splice(index, 1);
+            setData(newData);
+        }
+    };
+
     const updateField = (path: string, value: any) => {
         if (!data) return;
         const newData = { ...data };
@@ -366,8 +393,23 @@ export default function AdminPage() {
 
                         {activeTab === 'events' && (
                              <div className="space-y-6">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h3 className="font-bold text-xl text-navy-800">Rangkaian Acara</h3>
+                                    <button
+                                        onClick={addEvent}
+                                        className="bg-navy-700 text-white px-4 py-2 rounded-lg hover:bg-navy-800 transition flex items-center gap-2 font-bold shadow-md"
+                                    >
+                                        <FaPlus /> Tambah Acara
+                                    </button>
+                                </div>
                                 {Array.isArray(data.events) && data.events.map((event: any, index: number) => (
-                                    <div key={index} className="border-2 rounded-2xl p-6 bg-gray-50 relative">
+                                    <div key={index} className="border-2 rounded-2xl p-6 bg-gray-50 relative group">
+                                        <button
+                                            onClick={() => removeEvent(index)}
+                                            className="absolute top-4 right-4 bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition shadow-lg hover:bg-red-700"
+                                        >
+                                            <FaTrash size={12} />
+                                        </button>
                                         <h4 className="font-bold text-navy-800 mb-4 text-lg">Acara #{index + 1}</h4>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                             <InputField label="Nama Acara" value={event.name} onChange={(v) => updateField(`events[${index}].name`, v)} />
