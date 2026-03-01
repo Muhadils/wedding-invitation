@@ -9,49 +9,37 @@ export async function getWeddingData(): Promise<WeddingData> {
         const data = await fs.readFile(DB_PATH, 'utf-8');
         const parsed = JSON.parse(data);
 
-        // Merge with defaultData to ensure new fields (like countdown) exist
-        const mergedData: WeddingData = {
-            ...defaultData, // Start with all default properties
-            ...parsed, // Overlay with parsed data from db.json
-            countdown: parsed.countdown || defaultData.countdown, // Ensure countdown is handled
-            events: (parsed.events || []).map((parsedEvent: any) => {
-                // Find corresponding default event by name or index for embedUrl fallback
-                const correspondingDefaultEvent = defaultData.events.find(
-                    (de) => de.name === parsedEvent.name
-                ) || defaultData.events[parsed.events.indexOf(parsedEvent)];
-
+        // Merge with defaultData to ensure all required fields exist
+        return {
+            ...defaultData,
+            ...parsed,
+            events: (parsed.events || defaultData.events).map((parsedEvent: any, index: number) => {
+                const defaultEvent = defaultData.events[index] || defaultData.events[0];
                 return {
-                    ...correspondingDefaultEvent, // Take defaults for properties not in parsedEvent
-                    ...parsedEvent, // Overlay with parsedEvent properties
+                    ...defaultEvent,
+                    ...parsedEvent,
                     location: {
-                        ...correspondingDefaultEvent?.location, // Take default location properties
-                        ...parsedEvent.location, // Overlay with parsedEvent location properties
-                        embedUrl: parsedEvent.location.embedUrl || correspondingDefaultEvent?.location?.embedUrl || '' // Prefer parsed, fallback to default, then empty string
+                        ...defaultEvent.location,
+                        ...parsedEvent.location,
                     }
                 };
-            }).concat(
-                // Add any events from defaultData that are not in parsed.events (based on name)
-                defaultData.events.filter(
-                    (defaultEvent) => !(parsed.events || []).some((pe: any) => pe.name === defaultEvent.name)
-                )
-            ),
-            // Ensure wishes and gallery are also merged properly
-            wishes: parsed.wishes || defaultData.wishes,
-            gallery: parsed.gallery || defaultData.gallery,
-            music: parsed.music || defaultData.music,
+            }),
         };
-        return mergedData;
     } catch (error) {
-        // If db.json doesn't exist, return default data and create the file
-        await initDb();
+        // Fallback to default data if db.json is not found or cannot be read
+        console.warn('Database not found or inaccessible, using default data');
         return defaultData;
     }
 }
 
 export async function updateWeddingData(newData: WeddingData): Promise<boolean> {
     try {
-        await fs.writeFile(DB_PATH, JSON.stringify(newData, null, 2), 'utf-8');
-        return true;
+        // Only attempt to write if we're in a local environment where writing is possible
+        if (process.env.NODE_ENV === 'development') {
+            await fs.writeFile(DB_PATH, JSON.stringify(newData, null, 2), 'utf-8');
+            return true;
+        }
+        return false;
     } catch (error) {
         console.error('Error writing to db.json:', error);
         return false;
@@ -59,11 +47,12 @@ export async function updateWeddingData(newData: WeddingData): Promise<boolean> 
 }
 
 export async function initDb() {
-    try {
-        // Check if file exists
-        await fs.access(DB_PATH);
-    } catch {
-        // If not, write default data
-        await fs.writeFile(DB_PATH, JSON.stringify(defaultData, null, 2), 'utf-8');
+    // Only initialize in development
+    if (process.env.NODE_ENV === 'development') {
+        try {
+            await fs.access(DB_PATH);
+        } catch {
+            await fs.writeFile(DB_PATH, JSON.stringify(defaultData, null, 2), 'utf-8');
+        }
     }
 }
