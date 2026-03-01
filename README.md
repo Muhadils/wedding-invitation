@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 💍 Website Undangan Digital Premium
 
 Website undangan pernikahan digital yang modern, elegan, dan sangat interaktif dengan animasi cinematic yang memukau.
@@ -221,3 +222,6 @@ Jika ada pertanyaan atau butuh bantuan, silakan buat issue di repository ini.
 **Made with ❤️ for your special day**
 
 🎉 Selamat menikah! 🎉
+=======
+# wedding-invitation
+>>>>>>> 63cff98454746f5125eccd618fdf0d1360bdca33
