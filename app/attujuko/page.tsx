@@ -419,6 +419,13 @@ export default function AdminPage() {
                                             <div className="md:col-span-2">
                                                 <InputField label="Alamat Lengkap" value={event.location?.address} onChange={(v) => updateField(`events[${index}].location.address`, v)} />
                                             </div>
+                                            <div className="md:col-span-3 space-y-4">
+                                                <InputField label="Link Google Maps (Tombol)" value={event.location?.googleMapsUrl} onChange={(v) => updateField(`events[${index}].location.googleMapsUrl`, v)} />
+                                                <InputField label="Embed URL Maps (Peta)" value={event.location?.embedUrl} onChange={(v) => updateField(`events[${index}].location.embedUrl`, v)} />
+                                                <p className="text-xs text-gray-500 italic">
+                                                    * Ambil <strong>Embed URL</strong> dari: Google Maps &gt; Share &gt; Embed a map &gt; ambil isi src=&quot;...&quot;
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
