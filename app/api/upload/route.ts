@@ -4,60 +4,59 @@ import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
     try {
-        // 1. Periksa Login (Next.js 15 way)
         const cookieStore = await cookies();
         const token = cookieStore.get('admin_token');
 
         if (!token || token.value !== 'true') {
-            console.error('Unauthorized: No admin token found');
-            return NextResponse.json({ error: 'Unauthorized. Please login again.' }, { status: 401 });
+            return NextResponse.json({ error: 'Sesi login habis. Silakan login ulang.' }, { status: 401 });
         }
 
         const formData = await request.formData();
         const file = formData.get('file') as File;
 
         if (!file) {
-            return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
+            return NextResponse.json({ error: 'File tidak ditemukan' }, { status: 400 });
+        }
+
+        // Validasi ukuran file (Maks 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            return NextResponse.json({ error: 'File terlalu besar. Maksimal 5MB.' }, { status: 400 });
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = `gallery-${Date.now()}-${file.name.replace(/\s/g, '_')}`;
+        const filename = `img-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
 
-        // 2. Upload ke Supabase Storage (Bucket: gallery)
+        // 1. Upload ke Storage
         const { data: uploadData, error: uploadError } = await supabase.storage
             .from('gallery')
             .upload(filename, buffer, {
                 contentType: file.type,
-                cacheControl: '3600',
-                upsert: false
+                upsert: true
             });
 
         if (uploadError) {
-            console.error('Supabase Storage Error:', uploadError);
-            return NextResponse.json({ error: uploadError.message }, { status: 500 });
+            console.error('Storage Error:', uploadError);
+            return NextResponse.json({ error: `Gagal simpan ke Storage: ${uploadError.message}` }, { status: 500 });
         }
 
-        // 3. Ambil URL Publik
+        // 2. Ambil URL Publik
         const { data: { publicUrl } } = supabase.storage
             .from('gallery')
             .getPublicUrl(filename);
 
-        // 4. Catat di Database agar muncul di Gallery
+        // 3. Catat ke Database
         const { error: dbError } = await supabase
             .from('gallery')
             .insert([{ url: publicUrl, caption: file.name }]);
 
         if (dbError) {
-            console.error('Supabase Database Error:', dbError);
-            return NextResponse.json({ error: dbError.message }, { status: 500 });
+            console.error('Database Error:', dbError);
+            return NextResponse.json({ error: `Gagal catat ke Database: ${dbError.message}` }, { status: 500 });
         }
 
-        return NextResponse.json({
-            success: true,
-            url: publicUrl
-        });
+        return NextResponse.json({ success: true, url: publicUrl });
     } catch (error: any) {
-        console.error('Global Upload Error:', error);
-        return NextResponse.json({ error: error.message || 'Upload failed' }, { status: 500 });
+        console.error('API Error:', error);
+        return NextResponse.json({ error: `Terjadi kesalahan: ${error.message}` }, { status: 500 });
     }
 }
