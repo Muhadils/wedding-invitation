@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaSave, FaPlus, FaTrash, FaImage, FaHeart, FaCalendarAlt, FaMusic, FaGift, FaArrowLeft } from 'react-icons/fa';
+import { FaSave, FaTrash, FaImage, FaHeart, FaCalendarAlt, FaMusic, FaGift, FaArrowLeft } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 export default function AdminPage() {
@@ -17,10 +18,14 @@ export default function AdminPage() {
     }, []);
 
     const checkAuth = async () => {
-        const res = await fetch('/api/auth/check');
-        if (res.ok) {
-            setIsAuthenticated(true);
-            fetchData();
+        try {
+            const res = await fetch('/api/auth/check');
+            if (res.ok) {
+                setIsAuthenticated(true);
+                fetchData();
+            }
+        } catch (error) {
+            console.error('Auth check failed');
         }
     };
 
@@ -41,7 +46,7 @@ export default function AdminPage() {
                 setMessage({ type: 'error', text: 'Password salah' });
             }
         } catch (error) {
-            setMessage({ type: 'error', text: 'Terjadi kesalahan' });
+            setMessage({ type: 'error', text: 'Terjadi kesalahan login' });
         } finally {
             setLoading(false);
         }
@@ -52,17 +57,17 @@ export default function AdminPage() {
             const res = await fetch('/api/content');
             if (res.ok) {
                 const result = await res.json();
-                // If result is empty from Supabase, it will fallback to defaultData in API
                 setData(result);
             }
         } catch (error) {
-            console.error('Failed to fetch data');
+            console.error('Failed to fetch content');
         }
     };
 
     const handleSave = async () => {
         if (!data) return;
         setLoading(true);
+        setMessage(null);
         try {
             const res = await fetch('/api/content', {
                 method: 'POST',
@@ -76,10 +81,10 @@ export default function AdminPage() {
                 setTimeout(() => setMessage(null), 3000);
             } else {
                 const err = await res.json();
-                throw new Error(err.message || 'Failed to save');
+                throw new Error(err.message || 'Gagal menyimpan');
             }
         } catch (error: any) {
-            setMessage({ type: 'error', text: `Gagal menyimpan: ${error.message}` });
+            setMessage({ type: 'error', text: error.message });
         } finally {
             setLoading(false);
         }
@@ -103,57 +108,60 @@ export default function AdminPage() {
             const result = await res.json();
 
             if (res.ok) {
-                // Refresh data to show new image from Supabase gallery table
                 fetchData();
                 setMessage({ type: 'success', text: 'Foto berhasil diupload!' });
             } else {
-                throw new Error(result.error || 'Upload failed');
+                throw new Error(result.error || 'Upload gagal');
             }
         } catch (error: any) {
-            setMessage({ type: 'error', text: `Gagal upload: ${error.message}` });
+            setMessage({ type: 'error', text: error.message });
         } finally {
             setLoading(false);
         }
     };
 
-    const removeImage = async (index: number, imageId?: any) => {
-        if (!data) return;
+    const removeImage = async (index: number) => {
+        if (!data || !data.gallery) return;
         if (confirm('Yakin ingin menghapus foto ini?')) {
-            // For now, we just remove it from the local state and save
             const newData = { ...data };
             newData.gallery.splice(index, 1);
             setData(newData);
-            // If it's a Supabase image, we'll need a delete API later
-            // For now, Saving the content will update the view
-            handleSave();
+            // Auto-save when removing image
+            setLoading(true);
+            try {
+                await fetch('/api/content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newData),
+                });
+                setMessage({ type: 'success', text: 'Foto berhasil dihapus!' });
+            } catch (e) {
+                setMessage({ type: 'error', text: 'Gagal sinkronisasi hapus foto' });
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
     const updateField = (path: string, value: any) => {
         if (!data) return;
         const newData = { ...data };
-        const keys = path.split('.');
-        let current: any = newData;
+        const keys = path.split(/[.[\]]+/).filter(k => k !== '');
+        let current = newData;
 
         for (let i = 0; i < keys.length - 1; i++) {
-            if (keys[i].includes('[')) {
-                const [key, indexStr] = keys[i].split('[');
-                const index = parseInt(indexStr.replace(']', ''));
-                current = current[key][index];
+            const key = keys[i];
+            const nextKey = keys[i + 1];
+            // If next key is a number, current[key] should be an array
+            if (!isNaN(Number(nextKey))) {
+                if (!Array.isArray(current[key])) current[key] = [];
             } else {
-                current = current[keys[i]];
+                if (!current[key]) current[key] = {};
             }
+            current = current[key];
         }
 
-        const lastKey = keys[keys.length - 1];
-        if (lastKey.includes('[')) {
-            const [key, indexStr] = lastKey.split('[');
-            const index = parseInt(indexStr.replace(']', ''));
-            current[key][index] = value;
-        } else {
-            current[lastKey] = value;
-        }
-
+        current[keys[keys.length - 1]] = value;
         setData(newData);
     };
 
@@ -182,17 +190,24 @@ export default function AdminPage() {
                             {loading ? 'Logging in...' : 'Login'}
                         </button>
                     </form>
-                    {message && (
-                        <p className={`mt-4 text-center text-sm font-semibold ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-                            {message.text}
-                        </p>
-                    )}
+                    <AnimatePresence>
+                        {message && (
+                            <motion.p 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0 }}
+                                className={`mt-4 text-center text-sm font-semibold ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}
+                            >
+                                {message.text}
+                            </motion.p>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
         );
     }
 
-    if (!data) return <div className="min-h-screen flex items-center justify-center">Loading data...</div>;
+    if (!data) return <div className="min-h-screen flex items-center justify-center text-navy-800 font-bold">Memuat Data...</div>;
 
     return (
         <div className="min-h-screen bg-gray-100 pb-20">
@@ -211,32 +226,34 @@ export default function AdminPage() {
                             disabled={loading}
                             className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-gold-500 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-gold-600 transition shadow-lg disabled:opacity-50"
                         >
-                            <FaSave /> {loading ? 'Saving...' : 'Simpan Perubahan'}
+                            <FaSave /> {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
                         </button>
                     </div>
                 </div>
             </div>
 
             <div className="container mx-auto px-6 mt-8">
-                {message && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className={`mb-6 p-4 rounded-xl text-white font-semibold text-center shadow-lg ${message.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}
-                    >
-                        {message.text}
-                    </motion.div>
-                )}
+                <AnimatePresence>
+                    {message && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            className={`mb-6 p-4 rounded-xl text-white font-semibold text-center shadow-lg ${message.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}
+                        >
+                            {message.text}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
-                    {/* Tabs */}
                     <div className="flex overflow-x-auto bg-gray-50 border-b">
                         {[
-                            { id: 'couple', icon: <FaHeart />, label: 'Couple' },
-                            { id: 'events', icon: <FaCalendarAlt />, label: 'Events' },
-                            { id: 'gallery', icon: <FaImage />, label: 'Gallery' },
-                            { id: 'gift', icon: <FaGift />, label: 'Gifts' },
-                            { id: 'music', icon: <FaMusic />, label: 'Music' }
+                            { id: 'couple', icon: <FaHeart />, label: 'Pengantin' },
+                            { id: 'events', icon: <FaCalendarAlt />, label: 'Acara' },
+                            { id: 'gallery', icon: <FaImage />, label: 'Galeri' },
+                            { id: 'gift', icon: <FaGift />, label: 'Kado' },
+                            { id: 'music', icon: <FaMusic />, label: 'Musik' }
                         ].map((tab) => (
                             <button
                                 key={tab.id}
@@ -251,17 +268,17 @@ export default function AdminPage() {
                     <div className="p-8">
                         {activeTab === 'couple' && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                                <Section title="Bride (Mempelai Wanita)">
-                                    <InputField label="Nama Lengkap" value={data.couple.bride.fullName} onChange={(v) => updateField('couple.bride.fullName', v)} />
-                                    <InputField label="Nama Panggilan" value={data.couple.bride.shortName} onChange={(v) => updateField('couple.bride.shortName', v)} />
-                                    <InputField label="Nama Orang Tua" value={data.couple.bride.parents} onChange={(v) => updateField('couple.bride.parents', v)} />
-                                    <InputField label="Instagram" value={data.couple.bride.instagram} onChange={(v) => updateField('couple.bride.instagram', v)} />
+                                <Section title="Mempelai Wanita">
+                                    <InputField label="Nama Lengkap" value={data.couple?.bride?.fullName} onChange={(v) => updateField('couple.bride.fullName', v)} />
+                                    <InputField label="Nama Panggilan" value={data.couple?.bride?.shortName} onChange={(v) => updateField('couple.bride.shortName', v)} />
+                                    <InputField label="Nama Orang Tua" value={data.couple?.bride?.parents} onChange={(v) => updateField('couple.bride.parents', v)} />
+                                    <InputField label="Instagram" value={data.couple?.bride?.instagram} onChange={(v) => updateField('couple.bride.instagram', v)} />
                                 </Section>
-                                <Section title="Groom (Mempelai Pria)">
-                                    <InputField label="Nama Lengkap" value={data.couple.groom.fullName} onChange={(v) => updateField('couple.groom.fullName', v)} />
-                                    <InputField label="Nama Panggilan" value={data.couple.groom.shortName} onChange={(v) => updateField('couple.groom.shortName', v)} />
-                                    <InputField label="Nama Orang Tua" value={data.couple.groom.parents} onChange={(v) => updateField('couple.groom.parents', v)} />
-                                    <InputField label="Instagram" value={data.couple.groom.instagram} onChange={(v) => updateField('couple.groom.instagram', v)} />
+                                <Section title="Mempelai Pria">
+                                    <InputField label="Nama Lengkap" value={data.couple?.groom?.fullName} onChange={(v) => updateField('couple.groom.fullName', v)} />
+                                    <InputField label="Nama Panggilan" value={data.couple?.groom?.shortName} onChange={(v) => updateField('couple.groom.shortName', v)} />
+                                    <InputField label="Nama Orang Tua" value={data.couple?.groom?.parents} onChange={(v) => updateField('couple.groom.parents', v)} />
+                                    <InputField label="Instagram" value={data.couple?.groom?.instagram} onChange={(v) => updateField('couple.groom.instagram', v)} />
                                 </Section>
                             </div>
                         )}
@@ -269,7 +286,7 @@ export default function AdminPage() {
                         {activeTab === 'gallery' && (
                             <div>
                                 <div className="flex justify-between items-center mb-6">
-                                    <h3 className="font-bold text-xl text-navy-800">Gallery Photos</h3>
+                                    <h3 className="font-bold text-xl text-navy-800">Foto Galeri</h3>
                                     <label className="bg-navy-700 text-white px-6 py-2.5 rounded-xl cursor-pointer hover:bg-navy-800 transition flex items-center gap-2 font-bold shadow-lg">
                                         <FaImage /> Upload Foto Baru
                                         <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
@@ -291,19 +308,18 @@ export default function AdminPage() {
                             </div>
                         )}
 
-                        {/* Implement sections for events, gifts, music similar to above */}
                         {activeTab === 'events' && (
                              <div className="space-y-6">
-                                {data.events.map((event: any, index: number) => (
+                                {Array.isArray(data.events) && data.events.map((event: any, index: number) => (
                                     <div key={index} className="border-2 rounded-2xl p-6 bg-gray-50 relative">
-                                        <h4 className="font-bold text-navy-800 mb-4">Event #{index + 1}</h4>
+                                        <h4 className="font-bold text-navy-800 mb-4 text-lg">Acara #{index + 1}</h4>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                             <InputField label="Nama Acara" value={event.name} onChange={(v) => updateField(`events[${index}].name`, v)} />
                                             <InputField label="Tanggal (YYYY-MM-DD)" value={event.date} onChange={(v) => updateField(`events[${index}].date`, v)} />
                                             <InputField label="Waktu" value={event.time} onChange={(v) => updateField(`events[${index}].time`, v)} />
-                                            <InputField label="Lokasi" value={event.location.name} onChange={(v) => updateField(`events[${index}].location.name`, v)} />
+                                            <InputField label="Nama Lokasi" value={event.location?.name} onChange={(v) => updateField(`events[${index}].location.name`, v)} />
                                             <div className="md:col-span-2">
-                                                <InputField label="Alamat Lengkap" value={event.location.address} onChange={(v) => updateField(`events[${index}].location.address`, v)} />
+                                                <InputField label="Alamat Lengkap" value={event.location?.address} onChange={(v) => updateField(`events[${index}].location.address`, v)} />
                                             </div>
                                         </div>
                                     </div>
@@ -313,7 +329,7 @@ export default function AdminPage() {
 
                         {activeTab === 'gift' && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {data.gifts.map((gift: any, index: number) => (
+                                {Array.isArray(data.gifts) && data.gifts.map((gift: any, index: number) => (
                                     <div key={index} className="border-2 rounded-2xl p-6 bg-gray-50">
                                         <InputField label="Bank / Platform" value={gift.bankName} onChange={(v) => updateField(`gifts[${index}].bankName`, v)} />
                                         <InputField label="Nomor Rekening" value={gift.accountNumber} onChange={(v) => updateField(`gifts[${index}].accountNumber`, v)} />
@@ -325,10 +341,10 @@ export default function AdminPage() {
 
                         {activeTab === 'music' && (
                             <div className="max-w-xl">
-                                <InputField label="Judul Lagu" value={data.music.title} onChange={(v) => updateField('music.title', v)} />
-                                <InputField label="Artist" value={data.music.artist} onChange={(v) => updateField('music.artist', v)} />
-                                <InputField label="URL MP3 (Path atau Link)" value={data.music.url} onChange={(v) => updateField('music.url', v)} />
-                                <p className="mt-4 text-sm text-gray-500 italic">Contoh: /music/lagu.mp3 atau https://link-lagu.mp3</p>
+                                <InputField label="Judul Lagu" value={data.music?.title} onChange={(v) => updateField('music.title', v)} />
+                                <InputField label="Artist" value={data.music?.artist} onChange={(v) => updateField('music.artist', v)} />
+                                <InputField label="URL MP3" value={data.music?.url} onChange={(v) => updateField('music.url', v)} />
+                                <p className="mt-4 text-sm text-gray-500 italic">Gunakan path seperti /music/lagu.mp3 jika file ada di folder public/music.</p>
                             </div>
                         )}
                     </div>
