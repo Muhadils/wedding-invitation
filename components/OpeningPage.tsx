@@ -85,18 +85,18 @@ export default function OpeningPage({ guestName, onOpen, onMusicToggle, weddingD
                         {/* Middle Section: Empty */}
                         <div className="flex-1" />
 
-                        {/* Bottom Section: Guest & Minimalist Button */}
+                        {/* Bottom Section: Guest Info & Minimalist Button */}
                         <motion.div
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.6, duration: 0.8 }}
-                            className="w-full max-w-lg space-y-6 pb-2"
+                            className="w-full max-w-lg space-y-8 pb-4"
                         >
-                            <div className="space-y-2">
-                                <p className="text-white text-[10px] tracking-[0.2em] uppercase font-medium opacity-90" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
+                            <div className="flex flex-col items-center space-y-3">
+                                <p className="text-white text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-bold" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                                     Kepada Yth. Bapak/Ibu/Saudara/i
                                 </p>
-                                <h2 className="text-white text-2xl sm:text-3xl font-bold tracking-wide break-words" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                                <h2 className="text-white text-3xl sm:text-4xl font-bold tracking-wide break-words text-center" style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
                                     {guestName || "Tamu Undangan"}
                                 </h2>
                             </div>
