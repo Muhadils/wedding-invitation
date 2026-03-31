@@ -90,13 +90,13 @@ export default function OpeningPage({ guestName, onOpen, onMusicToggle, weddingD
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.6, duration: 0.8 }}
-                            className="w-full max-w-lg space-y-8 pb-4"
+                            className="w-full max-w-lg space-y-6 pb-4"
                         >
-                            <div className="flex flex-col items-center space-y-3">
-                                <p className="text-white text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-black" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                            <div className="flex flex-col items-center space-y-1">
+                                <p className="text-white text-[9px] sm:text-[10px] tracking-[0.3em] uppercase font-black" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                                     Kepada Yth. Bapak/Ibu/Saudara/i
                                 </p>
-                                <h2 className="text-white text-3xl sm:text-4xl font-black tracking-wide break-words text-center" style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
+                                <h2 className="text-white text-xl sm:text-2xl font-black tracking-wide break-words text-center" style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
                                     {guestName || "Tamu Undangan"}
                                 </h2>
                             </div>
@@ -107,9 +107,10 @@ export default function OpeningPage({ guestName, onOpen, onMusicToggle, weddingD
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={handleOpen}
-                                    className="group relative flex items-center justify-center gap-2.5 px-8 py-3 bg-white text-black font-bold rounded-full transition-all duration-300 border border-white/50"
+                                    className="group relative flex items-center justify-center gap-2.5 px-8 py-2.5 bg-white text-black font-bold rounded-full transition-all duration-300 border border-white/50"
                                 >
-                                    <FaEnvelopeOpen className="text-[12px] opacity-80" />
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                                    <FaEnvelopeOpen className="text-[11px] opacity-80" />
                                     <span className="uppercase tracking-[0.2em] text-[9px] sm:text-[10px] leading-none">
                                         Buka Undangan
                                     </span>
