@@ -25,10 +25,11 @@ export async function POST(request: Request) {
     try {
         const newData = await request.json();
         
-        // Simpan hanya bagian settings ke tabel wedding_settings
+        // Gunakan upsert agar data dibuat jika ID 1 belum ada
         const { error } = await supabase
             .from('wedding_settings')
-            .update({
+            .upsert({
+                id: 1, // Pastikan mengincar baris yang sama
                 couple: newData.couple,
                 events: newData.events,
                 love_story: newData.loveStory,
@@ -36,8 +37,7 @@ export async function POST(request: Request) {
                 music: newData.music,
                 countdown: newData.countdown,
                 updated_at: new Date().toISOString()
-            })
-            .eq('id', 1);
+            }, { onConflict: 'id' });
 
         if (error) throw error;
 

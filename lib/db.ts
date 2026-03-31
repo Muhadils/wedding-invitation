@@ -7,6 +7,7 @@ export async function getWeddingData(): Promise<WeddingData> {
         const { data: settings, error: settingsError } = await supabase
             .from('wedding_settings')
             .select('*')
+            .eq('id', 1)
             .maybeSingle();
 
         // 2. Ambil Ucapan
@@ -30,11 +31,16 @@ export async function getWeddingData(): Promise<WeddingData> {
             return Array.isArray(data) && data.length > 0 ? data : fallback;
         };
 
-        // Buat objek data yang benar-benar aman
+        // Jika data dari database ada, prioritaskan data tersebut
+        // Gabungkan bride/groom dengan default secara mendalam (deep merge sederhana)
+        const bride = { ...defaultData.couple.bride, ...(settings?.couple?.bride || {}) };
+        const groom = { ...defaultData.couple.groom, ...(settings?.couple?.groom || {}) };
+
         const mergedData: WeddingData = {
             couple: {
-                bride: settings?.couple?.bride || defaultData.couple.bride,
-                groom: settings?.couple?.groom || defaultData.couple.groom,
+                bride,
+                groom,
+                heroImage: settings?.couple?.heroImage || defaultData.couple.heroImage,
             },
             events: ensureArray(settings?.events, defaultData.events),
             loveStory: ensureArray(settings?.love_story, defaultData.loveStory),
@@ -51,7 +57,7 @@ export async function getWeddingData(): Promise<WeddingData> {
                 : defaultData.gallery,
         };
 
-        return JSON.parse(JSON.stringify(mergedData)); // Pastikan data adalah plain object
+        return JSON.parse(JSON.stringify(mergedData));
     } catch (error) {
         console.error('Critical error in getWeddingData:', error);
         return defaultData;
@@ -59,8 +65,27 @@ export async function getWeddingData(): Promise<WeddingData> {
 }
 
 export async function updateWeddingData(newData: WeddingData): Promise<boolean> {
-    return false;
+    try {
+        const { error } = await supabase
+            .from('wedding_settings')
+            .upsert({
+                id: 1,
+                couple: newData.couple,
+                events: newData.events,
+                love_story: newData.loveStory,
+                gifts: newData.gifts,
+                music: newData.music,
+                countdown: newData.countdown,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'id' });
+        
+        return !error;
+    } catch (e) {
+        console.error('Failed to update data:', e);
+        return false;
+    }
 }
 
 export async function initDb() {
+    // Placeholder if database initialization is needed
 }
