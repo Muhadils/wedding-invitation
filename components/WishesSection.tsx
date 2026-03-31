@@ -3,10 +3,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaHeart, FaUser, FaClock } from 'react-icons/fa';
-import { WeddingData } from '@/data/wedding-data'; // Keep for other data, but not for wishes directly
+import { WeddingData } from '@/data/wedding-data';
 
-// Define the Wish interface here or import it if already defined in wedding-data.ts
-// Assuming Wish is part of WeddingData
 type Wish = WeddingData['wishes'][0];
 
 interface WishesSectionProps {
@@ -14,7 +12,7 @@ interface WishesSectionProps {
 }
 
 export default function WishesSection({ weddingData }: WishesSectionProps) {
-    const [allWishes, setAllWishes] = useState<Wish[]>([]); // Initialize with empty array
+    const [allWishes, setAllWishes] = useState<Wish[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -28,8 +26,6 @@ export default function WishesSection({ weddingData }: WishesSectionProps) {
             }
             const data = await res.json();
             if (Array.isArray(data)) {
-                // Latest first is already handled by API (order: desc), 
-                // but we can ensure it here just in case.
                 setAllWishes(data); 
             } else {
                 setAllWishes([]);
@@ -44,14 +40,14 @@ export default function WishesSection({ weddingData }: WishesSectionProps) {
     };
 
     useEffect(() => {
-        fetchWishes(); // Fetch wishes on component mount
+        fetchWishes();
     }, []);
 
     const getAttendanceBadge = (attendance: string) => {
         const badges = {
             'hadir': { color: 'bg-green-100 text-green-700', text: '✅ Hadir' },
             'tidak hadir': { color: 'bg-red-100 text-red-700', text: '❌ Tidak Hadir' },
-            'belum pasti': { color: 'bg-yellow-100 text-yellow-700', text: '❓ Belum Pasti' },
+            'belum pasti': { color: 'bg-gray-100 text-gray-700', text: '❓ Belum Pasti' },
         };
         return badges[attendance as keyof typeof badges] || badges['belum pasti'];
     };
@@ -68,7 +64,7 @@ export default function WishesSection({ weddingData }: WishesSectionProps) {
     };
 
     return (
-        <section className="section bg-gradient-to-b from-white to-cream-50 relative overflow-hidden">
+        <section className="section bg-black relative overflow-hidden text-white border-t border-white/10">
             <div className="container mx-auto px-6 max-w-6xl">
                 {/* Title */}
                 <motion.div
@@ -78,13 +74,13 @@ export default function WishesSection({ weddingData }: WishesSectionProps) {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <div className="text-gold-500 text-5xl mb-6">
+                    <div className="text-pink-500 text-5xl mb-6">
                         <FaHeart className="inline" />
                     </div>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-navy-800 mb-4">
+                    <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
                         Ucapan & Doa
                     </h2>
-                    <p className="font-elegant text-lg md:text-xl text-navy-600">
+                    <p className="font-elegant text-lg md:text-xl text-gray-400">
                         Terima kasih atas ucapan dan doa dari keluarga dan sahabat
                     </p>
                 </motion.div>
@@ -98,19 +94,19 @@ export default function WishesSection({ weddingData }: WishesSectionProps) {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1, duration: 0.6 }}
                             viewport={{ once: true }}
-                            className="glass rounded-3xl p-6 hover:shadow-xl transition-shadow"
+                            className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-3xl p-6 hover:shadow-xl transition-shadow shadow-lg"
                         >
                             {/* Header */}
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center text-white">
+                                    <div className="w-12 h-12 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-sky-400">
                                         <FaUser />
                                     </div>
                                     <div>
-                                        <h4 className="font-display text-lg font-bold text-navy-800">
+                                        <h4 className="font-display text-lg font-bold text-white">
                                             {wish.name}
                                         </h4>
-                                        <div className="flex items-center gap-1 text-xs text-navy-500">
+                                        <div className="flex items-center gap-1 text-xs text-gray-500">
                                             <FaClock className="text-[10px]" />
                                             <span>{formatTimestamp(wish.timestamp)}</span>
                                         </div>
@@ -126,32 +122,17 @@ export default function WishesSection({ weddingData }: WishesSectionProps) {
                             </div>
 
                             {/* Message */}
-                            <p className="font-elegant text-base text-navy-700 leading-relaxed italic">
+                            <p className="font-elegant text-base text-gray-300 leading-relaxed italic">
                                 &quot;{wish.message}&quot;
                             </p>
 
                             {/* Decorative Element */}
                             <div className="mt-4 text-right">
-                                <FaHeart className="text-gold-400 inline text-sm" />
+                                <FaHeart className="text-pink-500/40 inline text-sm" />
                             </div>
                         </motion.div>
                     ))}
                 </div>
-
-                {/* Show More Button (Optional) */}
-                {allWishes.length > 9 && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        viewport={{ once: true }}
-                        className="text-center mt-12"
-                    >
-                        <button className="btn-primary">
-                            Lihat Lebih Banyak
-                        </button>
-                    </motion.div>
-                )}
             </div>
         </section>
     );

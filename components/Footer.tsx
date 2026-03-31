@@ -14,10 +14,7 @@ export default function Footer({ weddingData }: FooterProps) {
     const [currentUrl, setCurrentUrl] = useState('');
     const [copied, setCopied] = useState(false);
     const [showQR, setShowQR] = useState(false);
-    const groomName = weddingData.couple.groom.shortName;
-    const brideName = weddingData.couple.bride.shortName;
-    const date = weddingData.events[0].date;
-
+    
     useEffect(() => {
         setCurrentUrl(window.location.href);
     }, []);
@@ -44,10 +41,7 @@ export default function Footer({ weddingData }: FooterProps) {
     };
 
     return (
-        <footer className="bg-black relative overflow-hidden border-t border-zinc-900">
-            {/* Top Wave */}
-            <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-zinc-900 to-transparent opacity-50" />
-
+        <footer className="bg-black relative overflow-hidden border-t border-white/10">
             <div className="container mx-auto px-6 pt-20 pb-12 relative z-10">
                 {/* Share Section */}
                 <motion.div
@@ -57,7 +51,7 @@ export default function Footer({ weddingData }: FooterProps) {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h3 className="font-display text-3xl md:text-4xl font-bold text-gold-200 mb-4 tracking-wide">
+                    <h3 className="font-display text-3xl md:text-4xl font-bold text-white mb-4 tracking-wide">
                         Bagikan Undangan Ini
                     </h3>
                     <p className="font-elegant text-lg text-gray-500 mb-8 italic">
@@ -70,7 +64,7 @@ export default function Footer({ weddingData }: FooterProps) {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => handleShare('whatsapp')}
-                            className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all"
+                            className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-500 text-white rounded-full font-semibold shadow-lg transition-all"
                         >
                             <FaWhatsapp className="text-xl" />
                             WhatsApp
@@ -80,7 +74,7 @@ export default function Footer({ weddingData }: FooterProps) {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => handleShare('facebook')}
-                            className="flex items-center gap-2 px-6 py-3 bg-blue-700 hover:bg-blue-600 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all"
+                            className="flex items-center gap-2 px-6 py-3 bg-blue-700 hover:bg-blue-600 text-white rounded-full font-semibold shadow-lg transition-all"
                         >
                             <FaFacebook className="text-xl" />
                             Facebook
@@ -90,7 +84,7 @@ export default function Footer({ weddingData }: FooterProps) {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => handleShare('twitter')}
-                            className="flex items-center gap-2 px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all"
+                            className="flex items-center gap-2 px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white rounded-full font-semibold shadow-lg transition-all"
                         >
                             <FaTwitter className="text-xl" />
                             Twitter
@@ -100,7 +94,7 @@ export default function Footer({ weddingData }: FooterProps) {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={copyToClipboard}
-                            className="flex items-center gap-2 px-6 py-3 bg-gold-600 hover:bg-gold-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all"
+                            className="flex items-center gap-2 px-6 py-3 bg-white text-black rounded-full font-semibold shadow-lg hover:bg-gray-200 transition-all"
                         >
                             {copied ? <FaCheck className="text-xl" /> : <FaCopy className="text-xl" />}
                             {copied ? 'Tersalin!' : 'Salin Link'}
@@ -112,7 +106,7 @@ export default function Footer({ weddingData }: FooterProps) {
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             onClick={() => setShowQR(!showQR)}
-                            className="text-gold-500 hover:text-gold-400 font-semibold underline decoration-gold-500/50"
+                            className="text-white/60 hover:text-white font-semibold underline decoration-white/20"
                         >
                             {showQR ? 'Sembunyikan' : 'Tampilkan'} QR Code
                         </motion.button>
@@ -133,14 +127,11 @@ export default function Footer({ weddingData }: FooterProps) {
                                 fgColor="#000000"
                                 bgColor="#ffffff"
                             />
-                            <p className="text-sm text-black mt-4 font-elegant font-bold">
-                                Scan untuk membuka undangan
-                            </p>
                         </motion.div>
                     )}
                 </motion.div>
 
-                <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-gold-500 to-transparent mb-12 opacity-30" />
+                <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent mb-12 opacity-30" />
 
                 {/* Couple Names */}
                 <motion.div
@@ -150,19 +141,18 @@ export default function Footer({ weddingData }: FooterProps) {
                     viewport={{ once: true }}
                     className="text-center mb-12"
                 >
-                    {/* Helper function to format name with first letter capitalized and rest lowercase */}
                     {(() => {
                         const toTitleCase = (str: string) => {
                             if (!str) return '';
                             return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
                         };
                         return (
-                            <h2 className="font-alex-brush text-3xl md:text-4xl lg:text-6xl text-gold-500 mb-4 glow">
+                            <h2 className="font-alex-brush text-3xl md:text-4xl lg:text-6xl text-white mb-4">
                                 {toTitleCase(weddingData.couple.bride.shortName)} & {toTitleCase(weddingData.couple.groom.shortName)}
                             </h2>
                         );
                     })()}
-                    <p className="font-alex-brush text-xl text-gray-400">
+                    <p className="font-alex-brush text-xl text-gray-500">
                         {new Date(weddingData.events[0].date).toLocaleDateString('id-ID', {
                             day: 'numeric',
                             month: 'long',
@@ -171,53 +161,30 @@ export default function Footer({ weddingData }: FooterProps) {
                     </p>
                 </motion.div>
 
-                {/* Social Media Links */}
-                {(weddingData.couple.bride.instagram || weddingData.couple.groom.instagram) && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ delay: 0.2, duration: 0.8 }}
-                        viewport={{ once: true }}
-                        className="flex justify-center gap-6 mb-12"
-                    >
-                        {weddingData.couple.groom.instagram && (
-                            <a
-                                href={`https://instagram.com/${weddingData.couple.groom.instagram.substring(1)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-gold-500 transition-colors flex items-center gap-2"
-                            >
-                                <span className="font-elegant">@{weddingData.couple.groom.instagram.replace('@', '')}</span>
-                            </a>
-                        )}
-                        {weddingData.couple.bride.instagram && (
-                            <a
-                                href={`https://instagram.com/${weddingData.couple.bride.instagram.substring(1)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-gold-500 transition-colors flex items-center gap-2"
-                            >
-                                <span className="font-elegant">@{weddingData.couple.bride.instagram.replace('@', '')}</span>
-                            </a>
-                        )}
-                    </motion.div>
-                )}
-
-                {/* Bottom Ornament */}
+                {/* Bottom Ornament & Credits */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="text-center"
+                    className="text-center space-y-4"
                 >
-                    <div className="text-gold-500 text-5xl mb-6 opacity-80">❈</div>
-                    <p className="font-elegant text-gray-500 text-sm mb-4">
-                        Jasa Undangan Digital by <a href="https://instagram.com/_pecandufilter" target="_blank" rel="noopener noreferrer" className="text-gold-500 hover:text-gold-400 transition-colors">@_pecandufilter</a>
-                    </p>
-                    <p className="text-gray-600 text-xs tracking-widest uppercase">
-                        © {new Date().getFullYear()} • Undangan Digital @_pecandufilter
-                    </p>
+                    <div className="text-white text-4xl opacity-20">❈</div>
+                    
+                    <div className="space-y-2">
+                        <a 
+                            href="https://instagram.com/_pecandufilter" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-white/60 hover:text-white transition-colors text-xs sm:text-sm font-medium tracking-wide block"
+                        >
+                            Open jasa undangan digital di IG <span className="font-bold underline">@_PECANDUFILTER</span>
+                        </a>
+                        
+                        <p className="text-gray-600 text-[10px] tracking-[0.2em] uppercase">
+                            Copyright © {new Date().getFullYear()} • @_pecandufilter
+                        </p>
+                    </div>
                 </motion.div>
             </div>
         </footer>

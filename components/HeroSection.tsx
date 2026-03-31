@@ -52,18 +52,18 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
                 <div className="absolute inset-0 bg-black/60" />
             </motion.div>
 
-            {/* Floating Gold Particles */}
+            {/* Floating White Particles */}
             <div className="particles">
                 {[...Array(20)].map((_, i) => (
                     <motion.div
                         key={i}
-                        className="absolute rounded-full bg-gold-400"
+                        className="absolute rounded-full bg-white"
                         style={{
                             width: Math.random() * 4 + 1 + 'px',
                             height: Math.random() * 4 + 1 + 'px',
                             left: `${Math.random() * 100}%`,
                             top: `${Math.random() * 100}%`,
-                            opacity: Math.random() * 0.5 + 0.3,
+                            opacity: Math.random() * 0.4 + 0.1,
                         }}
                         animate={{
                             y: [0, -100],
@@ -89,14 +89,14 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
                     className="flex flex-col items-center"
                 >
                     {/* Top Ornament */}
-                    <motion.div variants={itemVariants} className="text-gold-500 text-5xl md:text-6xl mb-6">
+                    <motion.div variants={itemVariants} className="text-white text-5xl md:text-6xl mb-6">
                         ✦
                     </motion.div>
 
                     {/* Title */}
                     <motion.h2
                         variants={itemVariants}
-                        className="text-gold-200 text-sm md:text-lg tracking-[0.4em] mb-8 uppercase font-light"
+                        className="text-white text-sm md:text-lg tracking-[0.4em] mb-8 uppercase font-bold"
                     >
                         The Wedding Celebration
                     </motion.h2>
@@ -110,9 +110,9 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
                                                         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
                                                     };
                                                     return (
-                                                        <h1 className="font-alex-brush text-6xl sm:text-7xl md:text-[10rem] text-gold-400 break-words px-2"
+                                                        <h1 className="font-alex-brush text-6xl sm:text-7xl md:text-[10rem] text-white break-words px-2"
                                                             style={{
-                                                                textShadow: '0 0 15px rgba(230, 184, 0, 0.4)'
+                                                                textShadow: '0 0 15px rgba(255, 255, 255, 0.3)'
                                                             }}>
                                                             {toTitleCase(weddingData.couple.groom.shortName)}
                                                         </h1>
@@ -120,15 +120,14 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
                                                 })()}                        <motion.div
                             initial={{ width: 0 }}
                             whileInView={{ width: '100%' }}
-                            // transition={{ delay: 1.2, duration: 1 }} // Removed transition delay for testing
-                            className="h-[1px] bg-gradient-to-r from-transparent via-gold-500 to-transparent absolute -bottom-2 left-0 z-10"
+                            className="h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent absolute -bottom-2 left-0 z-10"
                         />
                     </motion.div>
 
-                    <motion.p variants={itemVariants} className="text-gray-300 font-elegant text-xl mb-1">
+                    <motion.p variants={itemVariants} className="text-gray-200 font-elegant text-xl mb-1">
                         {weddingData.couple.groom.fullName}
                     </motion.p>
-                    <motion.p variants={itemVariants} className="text-gray-500 text-sm italic mb-12 max-w-lg">
+                    <motion.p variants={itemVariants} className="text-gray-400 text-sm italic mb-12 max-w-lg">
                         {weddingData.couple.groom.parents}
                     </motion.p>
                     
@@ -136,8 +135,8 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
                                         <motion.div
                                             variants={itemVariants}
                                             whileHover={{ scale: 1.2, rotate: 180 }}
-                                            className="text-gold-500 font-alex-brush text-5xl my-4 cursor-default"
-                                            style={{ textShadow: '0 0 20px rgba(230, 184, 0, 0.6)' }}
+                                            className="text-white font-alex-brush text-5xl my-4 cursor-default"
+                                            style={{ textShadow: '0 0 20px rgba(255, 255, 255, 0.4)' }}
                                         >
                                             &
                                         </motion.div>
@@ -151,9 +150,9 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
                                                         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
                                                     };
                                                     return (
-                                                        <h1 className="font-alex-brush text-6xl sm:text-7xl md:text-[10rem] text-gold-400 break-words px-2"
+                                                        <h1 className="font-alex-brush text-6xl sm:text-7xl md:text-[10rem] text-white break-words px-2"
                                                             style={{
-                                                                textShadow: '0 0 15px rgba(230, 184, 0, 0.4)'
+                                                                textShadow: '0 0 15px rgba(255, 255, 255, 0.3)'
                                                             }}>
                                                             {toTitleCase(weddingData.couple.bride.shortName)}
                                                         </h1>
@@ -162,14 +161,13 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
                                                                     <motion.div
                                                                         initial={{ width: 0 }}
                                                                         whileInView={{ width: '100%' }}
-                                                                        // transition={{ delay: 0.8, duration: 1 }} // Removed transition delay for testing
-                                                                        className="h-[1px] bg-gradient-to-r from-transparent via-gold-500 to-transparent absolute -bottom-2 left-0 z-10"
+                                                                        className="h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent absolute -bottom-2 left-0 z-10"
                                                                     />                                        </motion.div>
                     
-                                                                                <motion.p variants={itemVariants} className="text-gray-300 font-elegant text-xl mb-1">
+                                                                                <motion.p variants={itemVariants} className="text-gray-200 font-elegant text-xl mb-1">
                     
                                                                                     {weddingData.couple.bride.fullName}                                        </motion.p>
-                                        <motion.p variants={itemVariants} className="text-gray-500 text-sm italic mb-8 max-w-lg">
+                                        <motion.p variants={itemVariants} className="text-gray-400 text-sm italic mb-8 max-w-lg">
                                             {weddingData.couple.bride.parents}
                                         </motion.p>
                     
@@ -178,10 +176,10 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
                     <motion.div
                         variants={itemVariants}
                         whileHover={{ scale: 1.05 }}
-                        className="glass-gold border border-gold-500/30 rounded-2xl px-10 py-6 relative overflow-hidden group"
+                        className="bg-white/10 backdrop-blur-md border border-white/30 rounded-2xl px-10 py-6 relative overflow-hidden group"
                     >
-                        <div className="absolute inset-0 bg-gold-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        <p className="font-elegant text-2xl md:text-3xl text-gold-100 relative z-10">
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <p className="font-elegant text-2xl md:text-3xl text-white relative z-10">
                             {new Date(weddingData.events[0].date).toLocaleDateString('id-ID', {
                                 weekday: 'long',
                                 year: 'numeric',
@@ -200,10 +198,10 @@ export default function HeroSection({ weddingData }: HeroSectionProps) {
                 transition={{ delay: 2, duration: 1 }}
                 className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
             >
-                <div className="text-gold-500/50 text-sm tracking-widest animate-pulse">
+                <div className="text-white/50 text-sm tracking-widest animate-pulse">
                     SCROLL DOWN
                 </div>
-                <div className="w-[1px] h-12 bg-gradient-to-b from-gold-500 to-transparent mx-auto mt-2" />
+                <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent mx-auto mt-2" />
             </motion.div>
         </section>
     );

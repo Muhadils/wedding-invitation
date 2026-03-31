@@ -19,7 +19,7 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setSubmitted(false); // Reset submitted state for new submissions
+        setSubmitted(false);
 
         try {
             const res = await fetch('/api/wishes', {
@@ -34,10 +34,8 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
 
             if (res.ok) {
                 setSubmitted(true);
-                // Refresh the page to show the new wish in WishesSection
                 window.location.reload();
             } else {
-                // Handle API error
                 alert('Gagal mengirim ucapan. Silakan coba lagi.');
             }
         } catch (error) {
@@ -47,7 +45,7 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
     };
 
     return (
-        <section className="section bg-gradient-to-b from-cream-50 to-white relative overflow-hidden">
+        <section className="section bg-black relative overflow-hidden text-white border-t border-white/10">
             <div className="container mx-auto px-6 max-w-4xl">
                 {/* Title */}
                 <motion.div
@@ -57,11 +55,11 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <div className="text-gold-500 text-5xl mb-6">✉</div>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-navy-800 mb-4">
+                    <div className="text-white text-5xl mb-6">✉</div>
+                    <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
                         Konfirmasi Kehadiran
                     </h2>
-                    <p className="font-elegant text-lg md:text-xl text-navy-600">
+                    <p className="font-elegant text-lg md:text-xl text-gray-400">
                         Mohon konfirmasi kehadiran Anda dan berikan ucapan untuk kami
                     </p>
                 </motion.div>
@@ -72,13 +70,13 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="glass rounded-3xl p-8 md:p-12"
+                    className="bg-zinc-900/80 backdrop-blur-md border border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl"
                 >
                     {!submitted ? (
                         <form onSubmit={handleSubmit} className="space-y-6">
                             {/* Name */}
                             <div>
-                                <label htmlFor="name" className="block font-semibold text-navy-700 mb-2">
+                                <label htmlFor="name" className="block font-semibold text-gray-300 mb-2">
                                     Nama Lengkap <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -87,14 +85,14 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full px-6 py-4 rounded-2xl border-2 border-gold-200 focus:border-gold-500 focus:outline-none transition-colors bg-white/80 text-navy-800"
+                                    className="w-full px-6 py-4 rounded-2xl border border-white/20 focus:border-white/50 focus:outline-none transition-colors bg-white/5 text-white"
                                     placeholder="Masukkan nama Anda"
                                 />
                             </div>
 
                             {/* Attendance */}
                             <div>
-                                <label className="block font-semibold text-navy-700 mb-3">
+                                <label className="block font-semibold text-gray-300 mb-3">
                                     Konfirmasi Kehadiran <span className="text-red-500">*</span>
                                 </label>
                                 <div className="space-y-3">
@@ -105,10 +103,10 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
                                     ].map((option) => (
                                         <label
                                             key={option.value}
-                                            className={`flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all ${formData.attendance === option.value
-                                                    ? 'border-gold-500 bg-gold-50'
-                                                    : 'border-gray-200 bg-white/50 hover:border-gold-300'
-                                                }`}
+                                            className={`flex items-center gap-4 p-4 rounded-2xl border transition-all ${formData.attendance === option.value
+                                                    ? 'border-white bg-white/10'
+                                                    : 'border-white/10 bg-white/5 hover:border-white/30'
+                                                } cursor-pointer`}
                                         >
                                             <input
                                                 type="radio"
@@ -117,10 +115,10 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
                                                 required
                                                 checked={formData.attendance === option.value}
                                                 onChange={(e) => setFormData({ ...formData, attendance: e.target.value })}
-                                                className="w-5 h-5 text-gold-500 focus:ring-gold-500"
+                                                className="w-5 h-5 accent-white"
                                             />
                                             <span className="text-2xl">{option.icon}</span>
-                                            <span className="font-elegant text-lg text-navy-700">{option.label}</span>
+                                            <span className="font-elegant text-lg text-white">{option.label}</span>
                                         </label>
                                     ))}
                                 </div>
@@ -128,7 +126,7 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
 
                             {/* Message */}
                             <div>
-                                <label htmlFor="message" className="block font-semibold text-navy-700 mb-2">
+                                <label htmlFor="message" className="block font-semibold text-gray-300 mb-2">
                                     Ucapan & Doa <span className="text-red-500">*</span>
                                 </label>
                                 <textarea
@@ -137,7 +135,7 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
                                     value={formData.message}
                                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                     rows={5}
-                                    className="w-full px-6 py-4 rounded-2xl border-2 border-gold-200 focus:border-gold-500 focus:outline-none transition-colors bg-white/80 text-navy-800 resize-none"
+                                    className="w-full px-6 py-4 rounded-2xl border border-white/20 focus:border-white/50 focus:outline-none transition-colors bg-white/5 text-white resize-none"
                                     placeholder="Tuliskan ucapan dan doa untuk kami..."
                                 />
                             </div>
@@ -147,9 +145,9 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="submit"
-                                className="w-full btn-primary flex items-center justify-center gap-3 !py-4"
+                                className="w-full bg-white text-black py-4 rounded-full flex items-center justify-center gap-3 font-bold shadow-lg hover:bg-gray-200 transition-all"
                             >
-                                <FaPaperPlane />
+                                <FaPaperPlane className="text-sky-500" />
                                 Kirim Ucapan
                             </motion.button>
                         </form>
@@ -167,14 +165,14 @@ export default function RSVPForm({ weddingData }: RSVPFormProps) {
                             >
                                 <FaCheckCircle className="inline" />
                             </motion.div>
-                            <h3 className="font-display text-3xl font-bold text-navy-800 mb-3">
+                            <h3 className="font-display text-3xl font-bold text-white mb-3">
                                 Terima Kasih! 🎉
                             </h3>
-                            <p className="font-elegant text-lg text-navy-600">
+                            <p className="font-elegant text-lg text-gray-400">
                                 Ucapan Anda telah berhasil dikirim
                             </p>
                             <div className="mt-6">
-                                <FaHeart className="text-gold-500 text-3xl inline animate-pulse" />
+                                <FaHeart className="text-pink-500 text-3xl inline animate-pulse" />
                             </div>
                         </motion.div>
                     )}

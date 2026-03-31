@@ -21,11 +21,10 @@ export default function PhotoGallery({ weddingData }: PhotoGalleryProps) {
                     initial={{ opacity: 0, y: -20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="mb-16"
+                    className="mb-12"
                 >
-                    <div className="text-gold-500 text-5xl mb-6">❀</div>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-gold-200 mb-4">Galeri Kami</h2>
-                    <p className="font-elegant text-lg text-gray-400 italic">Momen indah perjalanan cinta kami</p>
+                    <div className="text-white text-5xl mb-6">❀</div>
+                    <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">Galeri Kami</h2>
                 </motion.div>
 
                 {photos.length === 0 ? (
@@ -43,7 +42,7 @@ export default function PhotoGallery({ weddingData }: PhotoGalleryProps) {
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: index * 0.1 }}
                                 viewport={{ once: true }}
-                                className="relative aspect-square cursor-pointer rounded-2xl overflow-hidden border border-gold-500/20 group"
+                                className="relative aspect-square cursor-pointer rounded-2xl overflow-hidden border border-white/10 group shadow-lg"
                                 onClick={() => setSelectedImage(photo.url)}
                             >
                                 <img
@@ -51,12 +50,11 @@ export default function PhotoGallery({ weddingData }: PhotoGalleryProps) {
                                     alt={photo.caption || ''}
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     onError={(e) => {
-                                        // Fallback if image fails to load
                                         (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400?text=Image+Not+Found';
                                     }}
                                 />
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <span className="text-gold-200 text-sm font-bold border border-gold-500 px-4 py-2 rounded-full">Perbesar</span>
+                                    <span className="text-white text-sm font-bold border border-white px-4 py-2 rounded-full backdrop-blur-sm">Perbesar</span>
                                 </div>
                             </motion.div>
                         ))}
@@ -74,7 +72,7 @@ export default function PhotoGallery({ weddingData }: PhotoGalleryProps) {
                         className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 backdrop-blur-xl"
                         onClick={() => setSelectedImage(null)}
                     >
-                        <button className="absolute top-6 right-6 text-white/50 hover:text-gold-500 p-2" onClick={() => setSelectedImage(null)}>
+                        <button className="absolute top-6 right-6 text-white/50 hover:text-white p-2" onClick={() => setSelectedImage(null)}>
                             <FaTimes size={32} />
                         </button>
                         <motion.img

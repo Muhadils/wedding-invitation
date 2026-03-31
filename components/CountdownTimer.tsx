@@ -17,18 +17,18 @@ const CountdownItem = ({ value, label, delay }: CountdownItemProps) => (
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ delay, duration: 0.6 }}
         viewport={{ once: true }}
-        className="glass-gold rounded-2xl p-6 md:p-8 min-w-[100px] md:min-w-[140px] glow"
+        className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 md:p-8 min-w-[100px] md:min-w-[140px] shadow-xl"
     >
         <motion.div
             key={value}
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="font-display text-4xl md:text-6xl font-bold text-gradient-gold mb-2"
+            className="font-display text-4xl md:text-6xl font-bold text-white mb-2"
         >
             {String(value).padStart(2, '0')}
         </motion.div>
-        <p className="text-navy-600 text-xs md:text-sm uppercase tracking-wider font-semibold">
+        <p className="text-gray-300 text-xs md:text-sm uppercase tracking-wider font-bold">
             {label}
         </p>
     </motion.div>
@@ -57,7 +57,7 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ duration: 0.8, type: 'spring' }}
-                        className="font-script text-5xl md:text-7xl text-gradient-gold"
+                        className="font-script text-5xl md:text-7xl text-white"
                     >
                         The Day Has Arrived! 🎉
                     </motion.h3>
@@ -78,9 +78,9 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
     return (
         <section className="section bg-black relative overflow-hidden text-white">
             {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-20">
+            <div className="absolute inset-0 opacity-10">
                 <div className="absolute inset-0" style={{
-                    backgroundImage: `radial-gradient(circle, var(--gold) 1px, transparent 1px)`,
+                    backgroundImage: `radial-gradient(circle, #ffffff 1px, transparent 1px)`,
                     backgroundSize: '30px 30px'
                 }} />
             </div>
@@ -92,7 +92,7 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="text-gold-500 text-5xl mb-6 glow"
+                    className="text-white text-5xl mb-6"
                 >
                     ✧
                 </motion.div>
@@ -103,7 +103,7 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="font-display text-4xl md:text-5xl font-bold text-gold-200 mb-4 tracking-wider"
+                    className="font-display text-4xl md:text-5xl font-bold text-white mb-4 tracking-wider"
                 >
                     Counting Down to Forever
                 </motion.h2>
@@ -125,7 +125,6 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
                     
                     try {
                         if (firstEvent && firstEvent.date) {
-                            // Extract only the HH:mm from time string (e.g. "08:00 - 10:00 WIB")
                             const timeMatch = firstEvent.time.match(/(\d{1,2})[:.](\d{2})/);
                             let timeStr = "08:00";
                             
@@ -135,10 +134,6 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
                             
                             const dateString = `${firstEvent.date}T${timeStr}:00`;
                             targetDate = new Date(dateString);
-
-                            if (isNaN(targetDate.getTime())) {
-                                throw new Error('Invalid date');
-                            }
                         } else {
                             targetDate = new Date(weddingData.countdown?.targetDate || '2026-06-15T08:00:00');
                         }
@@ -146,7 +141,6 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
                         targetDate = new Date(weddingData.countdown?.targetDate || '2026-06-15T08:00:00');
                     }
 
-                    // Final fallback if everything is NaN
                     if (isNaN(targetDate.getTime())) {
                         targetDate = new Date('2026-06-15T08:00:00');
                     }
@@ -160,7 +154,7 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="text-gold-500 text-5xl mt-12 glow"
+                    className="text-white text-5xl mt-12"
                 >
                     ✧
                 </motion.div>
