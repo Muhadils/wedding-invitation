@@ -59,7 +59,7 @@ export default function OpeningPage({ guestName, onOpen, onMusicToggle, weddingD
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.2, duration: 0.8 }}
                             >
-                                <span className="text-white uppercase tracking-[0.5em] text-[10px] sm:text-xs font-bold bg-black/20 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
+                                <span className="text-white uppercase tracking-[0.6em] text-[10px] sm:text-xs font-black bg-black/20 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
                                     The Wedding Of
                                 </span>
                             </motion.div>
@@ -70,13 +70,13 @@ export default function OpeningPage({ guestName, onOpen, onMusicToggle, weddingD
                                 transition={{ delay: 0.4, duration: 1 }}
                                 className="flex flex-wrap items-center justify-center gap-3 sm:gap-5"
                             >
-                                <h1 className="font-alex-brush text-5xl sm:text-6xl text-white" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
+                                <h1 className="font-alex-brush text-5xl sm:text-6xl text-white font-black" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
                                     {toTitleCase(weddingData.couple.groom.shortName)}
                                 </h1>
-                                <span className="font-alex-brush text-3xl sm:text-4xl text-white" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+                                <span className="font-alex-brush text-3xl sm:text-4xl text-white font-black" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.4)' }}>
                                     &
                                 </span>
-                                <h1 className="font-alex-brush text-5xl sm:text-6xl text-white" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
+                                <h1 className="font-alex-brush text-5xl sm:text-6xl text-white font-black" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
                                     {toTitleCase(weddingData.couple.bride.shortName)}
                                 </h1>
                             </motion.div>
@@ -93,10 +93,10 @@ export default function OpeningPage({ guestName, onOpen, onMusicToggle, weddingD
                             className="w-full max-w-lg space-y-8 pb-4"
                         >
                             <div className="flex flex-col items-center space-y-3">
-                                <p className="text-white text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-bold" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                                <p className="text-white text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-black" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                                     Kepada Yth. Bapak/Ibu/Saudara/i
                                 </p>
-                                <h2 className="text-white text-3xl sm:text-4xl font-bold tracking-wide break-words text-center" style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
+                                <h2 className="text-white text-3xl sm:text-4xl font-black tracking-wide break-words text-center" style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
                                     {guestName || "Tamu Undangan"}
                                 </h2>
                             </div>
