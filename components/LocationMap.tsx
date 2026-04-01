@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaDirections } from 'react-icons/fa';
 import { WeddingData } from '@/data/wedding-data';
+import BackgroundSlideshow from './BackgroundSlideshow';
 
 interface LocationMapProps {
     weddingData: WeddingData;
@@ -14,7 +15,8 @@ export default function LocationMap({ weddingData }: LocationMapProps) {
     if (events.length === 0) return null;
 
     return (
-        <section className="section bg-black relative overflow-hidden text-white border-t border-white/5">
+        <section className="section bg-black relative overflow-hidden text-white border-t border-white/5 py-24">
+            <BackgroundSlideshow images={weddingData.gallery} overlayOpacity={0.8} />
             {/* Background - Simplified (No pattern for cleaner look) */}
             <div className="container mx-auto px-6 relative z-10">
                 {/* Title */}

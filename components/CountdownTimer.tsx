@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Countdown from 'react-countdown';
 import { WeddingData } from '@/data/wedding-data';
+import BackgroundSlideshow from './BackgroundSlideshow';
 
 interface CountdownItemProps {
     value: number;
@@ -52,7 +53,7 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
     const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
         if (completed) {
             return (
-                <div className="text-center">
+                <div className="text-center relative z-10">
                     <motion.h3
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
@@ -66,7 +67,7 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
         }
 
         return (
-            <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6 relative z-10">
                 <CountdownItem value={days} label="Hari" delay={0.2} />
                 <CountdownItem value={hours} label="Jam" delay={0.3} />
                 <CountdownItem value={minutes} label="Menit" delay={0.4} />
@@ -76,9 +77,10 @@ export default function CountdownTimer({ weddingData }: CountdownTimerProps) {
     };
 
     return (
-        <section className="section bg-black relative overflow-hidden text-white">
+        <section className="section bg-black relative overflow-hidden text-white py-24">
+            <BackgroundSlideshow images={weddingData.gallery} overlayOpacity={0.7} />
             {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0 opacity-10 z-0">
                 <div className="absolute inset-0" style={{
                     backgroundImage: `radial-gradient(circle, #ffffff 1px, transparent 1px)`,
                     backgroundSize: '30px 30px'

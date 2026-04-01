@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { FaClock, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
 import { weddingData, downloadCalendar, type WeddingData } from '@/data/wedding-data';
+import BackgroundSlideshow from './BackgroundSlideshow';
 
 interface EventCardProps {
     event: typeof weddingData.events[0];
@@ -101,8 +102,9 @@ interface EventDetailsProps {
 
 export default function EventDetails({ weddingData }: EventDetailsProps) {
     return (
-        <section className="section bg-black relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0%,transparent_70%)]" />
+        <section className="section bg-black relative overflow-hidden py-24">
+            <BackgroundSlideshow images={weddingData.gallery} overlayOpacity={0.7} />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0%,transparent_70%)] z-0" />
 
             <div className="container mx-auto px-6 relative z-10">
                 {/* Title */}

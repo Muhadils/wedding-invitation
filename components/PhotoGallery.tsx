@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaImage } from 'react-icons/fa';
 import { WeddingData } from '@/data/wedding-data';
+import BackgroundSlideshow from './BackgroundSlideshow';
 
 interface PhotoGalleryProps {
     weddingData: WeddingData;
@@ -15,7 +16,8 @@ export default function PhotoGallery({ weddingData }: PhotoGalleryProps) {
     const photos = Array.isArray(weddingData.gallery) ? weddingData.gallery : [];
 
     return (
-        <section className="section bg-black relative py-20 min-h-[400px]">
+        <section className="section bg-black relative py-24 min-h-[400px] overflow-hidden">
+            <BackgroundSlideshow images={weddingData.gallery} overlayOpacity={0.85} />
             <div className="container mx-auto px-6 relative z-10 text-center">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}

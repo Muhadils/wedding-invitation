@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { FaWhatsapp, FaFacebook, FaTwitter, FaCopy, FaCheck } from 'react-icons/fa';
 import { QRCodeSVG } from 'qrcode.react';
 import { WeddingData } from '@/data/wedding-data';
+import BackgroundSlideshow from './BackgroundSlideshow';
 
 interface FooterProps {
     weddingData: WeddingData;
@@ -42,6 +43,7 @@ export default function Footer({ weddingData }: FooterProps) {
 
     return (
         <footer className="bg-black relative overflow-hidden border-t border-white/10">
+            <BackgroundSlideshow images={weddingData.gallery} overlayOpacity={0.8} />
             <div className="container mx-auto px-6 pt-20 pb-12 relative z-10">
                 {/* Share Section */}
                 <motion.div

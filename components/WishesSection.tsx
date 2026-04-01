@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaHeart, FaUser, FaClock } from 'react-icons/fa';
 import { WeddingData } from '@/data/wedding-data';
+import BackgroundSlideshow from './BackgroundSlideshow';
 
 type Wish = WeddingData['wishes'][0];
 
@@ -64,8 +65,9 @@ export default function WishesSection({ weddingData }: WishesSectionProps) {
     };
 
     return (
-        <section className="section bg-black relative overflow-hidden text-white border-t border-white/10">
-            <div className="container mx-auto px-6 max-w-6xl">
+        <section className="section bg-black relative overflow-hidden text-white border-t border-white/10 py-24">
+            {weddingData && <BackgroundSlideshow images={weddingData.gallery} overlayOpacity={0.8} />}
+            <div className="container mx-auto px-6 max-w-6xl relative z-10">
                 {/* Title */}
                 <motion.div
                     initial={{ opacity: 0, y: -30 }}
