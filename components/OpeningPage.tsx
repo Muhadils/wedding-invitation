@@ -94,7 +94,7 @@ export default function OpeningPage({ guestName, onOpen, onMusicToggle, weddingD
                         >
                             <div className="flex flex-col items-center space-y-1">
                                 <p className="text-white text-[9px] sm:text-[10px] tracking-[0.3em] uppercase font-black" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                                    Kepada Yth. Bapak/Ibu/Saudara/i
+                                    Kepada Yth.<br /> Bapak/Ibu/Saudara/i
                                 </p>
                                 <h2 className="text-white text-xl sm:text-2xl font-black tracking-wide break-words text-center" style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
                                     {guestName || "Tamu Undangan"}
